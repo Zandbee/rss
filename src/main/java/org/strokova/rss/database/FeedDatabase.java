@@ -1,6 +1,6 @@
 package org.strokova.rss.database;
 
-import org.strokova.rss.obj.Feed;
+import org.strokova.rss.obj.FeedItem;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,7 +17,7 @@ import java.sql.Statement;
 
 public class FeedDatabase {
 
-    public Feed getFeed() {
+    public FeedItem getFeed() {
         try {
             Context initCtx = new InitialContext();
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -29,13 +29,13 @@ public class FeedDatabase {
                 ResultSet resultSet = stm.executeQuery(query);
 
                 if (resultSet.next()) {
-                    Feed feed = new Feed();
+                    FeedItem feedItem = new FeedItem();
                     String title = resultSet.getString("title");
                     String description = resultSet.getString("description");
                     System.out.println("Title: " + title);
                     System.out.println("Title: " + description);
-                    feed.setName(title);
-                    return feed;
+                    feedItem.setTitle(title);
+                    return feedItem;
                 }
             }
         } catch (NamingException | SQLException ex) {
