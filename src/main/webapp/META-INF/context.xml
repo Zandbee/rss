@@ -2,13 +2,13 @@
 
 <Context>
 
-    <Resource name="jdbc/sakila"
+    <Resource name="jdbc/rss"
               auth="Container"
               type="javax.sql.DataSource"
               username="admin"
               password="admin"
               driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/sakila"
+              url="jdbc:mysql://localhost:3306/rss"
               maxActive="15"
               maxIdle="3"
               />

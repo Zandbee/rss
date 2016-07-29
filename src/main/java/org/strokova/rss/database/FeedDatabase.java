@@ -21,16 +21,20 @@ public class FeedDatabase {
         try {
             Context initCtx = new InitialContext();
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/sakila");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/rss");
 
-            String query = "select * from actor where actor_id=\"5\"";
+            String query = "select * from feed_item";
             try (Connection conn = ds.getConnection()) {
                 Statement stm = conn.createStatement();
                 ResultSet resultSet = stm.executeQuery(query);
 
                 if (resultSet.next()) {
                     Feed feed = new Feed();
-                    feed.setName(resultSet.getString("first_name"));
+                    String title = resultSet.getString("title");
+                    String description = resultSet.getString("description");
+                    System.out.println("Title: " + title);
+                    System.out.println("Title: " + description);
+                    feed.setName(title);
                     return feed;
                 }
             }
