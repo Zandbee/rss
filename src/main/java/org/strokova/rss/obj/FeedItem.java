@@ -6,6 +6,25 @@ import java.util.Date;
  * Created by Veronika on 7/28/2016.
  */
 public class FeedItem {
+    public enum FeedItemColumn {
+        GUID("guid"),
+        TITLE("title"),
+        DESCRIPTION("description"),
+        LINK("link"),
+        PUB_DATE("pub_date"),
+        FEED_ID("feed_id");
+
+        private final String columnName;
+
+        FeedItemColumn(String columnName) {
+            this.columnName = columnName;
+        }
+
+        public String getColumnName() {
+            return columnName;
+        }
+    }
+
     private String guid;
     private String title;
     private String description;
