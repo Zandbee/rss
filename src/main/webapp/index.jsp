@@ -15,9 +15,8 @@
 <table border="1">
 <c:forEach var="feedItem" items="${feedDAO.feedItems}">
     <tr><td>
-        <h4>${feedItem.title}</h4>
+        <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
         <p>${feedItem.description}</p>
-        <a href="">${feedItem.link}</a>
     </td></tr>
 </c:forEach>
 </table>
