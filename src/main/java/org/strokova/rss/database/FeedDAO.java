@@ -40,7 +40,7 @@ public class FeedDAO {
         return null;
     }
 
-    public ArrayList<FeedItem> getFeeds() {
+    public ArrayList<FeedItem> getFeedItems() {
         String query = "select * from feed_item";
         try (Connection conn = FeedDbDataSource.getDataSource().getConnection()) {
             Statement stm = conn.createStatement();
@@ -59,12 +59,10 @@ public class FeedDAO {
 
                 feedItems.add(feedItem);
             }
-
             return feedItems;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
-
         return null;
     }
 }
