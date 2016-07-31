@@ -6,11 +6,11 @@ import org.strokova.rss.obj.FeedItem;
  * Created by Veronika on 7/28/2016.
  */
 public class FeedManager {
-    private FeedDAO database = null;
+    private FeedDbUtils database = null;
 
     public FeedManager() {}
 
-    public void setDatabase(FeedDAO db) {
+    public void setDatabase(FeedDbUtils db) {
         this.database = db;
     }
 
