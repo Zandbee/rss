@@ -10,8 +10,8 @@ public class FeedItem {
     private String title;
     private String description;
     private String link;
-    private Date pubDate;
-    private String feedId;
+    private Date pub_date;
+    private String feed_id;
 
     public FeedItem() {
     }
@@ -24,12 +24,12 @@ public class FeedItem {
         this.guid = guid;
     }
 
-    public String getFeedId() {
-        return feedId;
+    public String getFeed_id() {
+        return feed_id;
     }
 
-    public void setFeedId(String feedId) {
-        this.feedId = feedId;
+    public void setFeed_id(String feed_id) {
+        this.feed_id = feed_id;
     }
 
     public String getLink() {
@@ -56,11 +56,11 @@ public class FeedItem {
         this.description = description;
     }
 
-    public Date getPubDate() {
-        return pubDate;
+    public Date getPub_date() {
+        return pub_date;
     }
 
-    public void setPubDate(Date pubDate) {
-        this.pubDate = pubDate;
+    public void setPub_date(Date pub_date) {
+        this.pub_date = pub_date;
     }
 }
