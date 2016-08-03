@@ -51,6 +51,12 @@
       <artifactId>commons-dbutils</artifactId>
       <version>1.6</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.rometools</groupId>
+      <artifactId>rome</artifactId>
+      <version>1.7.0</version>
+    </dependency>
   </dependencies>
 
   <build>

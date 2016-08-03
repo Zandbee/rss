@@ -79,9 +79,6 @@ public class FeedDbUtils {
         List<Feed> feeds = null;
         try {
             feeds = run.query(query, resultHandler, userId);
-            for (Feed f : feeds) {
-                logger.info(f.getFeed_name());
-            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
@@ -116,6 +113,19 @@ public class FeedDbUtils {
             return user.getId();
         } else {
             return NO_RESULT_ID; // TODO: handle 'nothing found' cases
+        }
+    }
+
+    // insert new RSS feed into feed table
+    public static void insertRssIntoFeed(String feedLink, String feedName) {
+        String query = "insert into feed (feed_link, feed_name) values (?, ?)";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
+        try {
+            run.insert(query, resultHandler, feedLink, feedName);
+        } catch (SQLException e) {
+            //TODO: can handle Duplicate entry 1062 error
+            logger.log(Level.SEVERE, "Error executing SQL", e);
         }
     }
 }
