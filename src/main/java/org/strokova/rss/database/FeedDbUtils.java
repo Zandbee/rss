@@ -56,7 +56,7 @@ public class FeedDbUtils {
         return feedItems;
     }
 
-    public static String getFeedNameByFeedLink(String feedLink) {
+    public static Feed getFeedByFeedLink(String feedLink) {
         String query = "select * from feed where feed_link = ?";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
@@ -66,7 +66,7 @@ public class FeedDbUtils {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
-        return feed.getFeed_name(); //TODO
+        return feed;
     }
 
     public static List<Feed> getUserFeeds(int userId) {
@@ -122,16 +122,14 @@ public class FeedDbUtils {
     public static int insertRssIntoFeedTable(String feedLink, String feedName) {
         String query = "insert into feed (feed_link, feed_name) values (?, ?)";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
-        Feed feed = null;
+        ResultSetHandler<Feed> resultHandler = new  BeanHandler<>(Feed.class);
         try {
-            feed = run.insert(query, resultHandler, feedLink, feedName);
-
+            run.insert(query, resultHandler, feedLink, feedName);
         } catch (SQLException e) {
             //TODO: can handle Duplicate entry 1062 error
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
-        return feed.getId();
+        return getFeedByFeedLink(feedLink).getId();
     }
 
     public static void insertIntoSubscriptionTable(int userId, int feedId) {

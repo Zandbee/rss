@@ -7,7 +7,8 @@
     <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
     <section>
         <c:set var="feedLink" value="${param.id}" />
-        <h2>${feedDAO.getFeedNameByFeedLink(feedLink)}</h2>
+        <c:set var="feed" value="${feedDAO.getFeedByFeedLink(feedLink)}"/>
+        <h2>${feed.feed_name}</h2>
         <table>
             <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLink(feedLink)}">
                 <tr><td>

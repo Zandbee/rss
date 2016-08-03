@@ -49,7 +49,7 @@ public class AddRssServlet extends HttpServlet {
             logger.info("new feed id = " + feedId);
 
             //add to subscription table for this user
-            //FeedDbUtils.insertIntoSubscriptionTable((int) request.getSession().getAttribute("userId"), feedId);
+            FeedDbUtils.insertIntoSubscriptionTable((int) request.getSession().getAttribute("userId"), feedId);
 
             /*for (SyndEntry item : feedItems) {
                 logger.info(item.getUri()); //guid
