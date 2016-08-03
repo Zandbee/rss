@@ -79,6 +79,9 @@ public class FeedDbUtils {
         List<Feed> feeds = null;
         try {
             feeds = run.query(query, resultHandler, userId);
+            for (Feed f : feeds) {
+                logger.info(f.getFeed_name());
+            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

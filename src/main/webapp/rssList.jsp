@@ -18,7 +18,7 @@ section {
     <table>
         <c:forEach var="feed" items="${feedDAO.getUserFeeds(sessionScope.userId)}">
             <tr><td>
-                <a href="${pageContext.request.contextPath}/feed?id=${feed.feed_link}">${feed.feed_name}</a>
+                <p><a href="feed.jsp?id=${feed.feed_link}">${feed.feed_name}</a></p>
             </td></tr>
         </c:forEach>
     </table>
