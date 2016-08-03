@@ -44,8 +44,12 @@ public class AddRssServlet extends HttpServlet {
             SyndFeed feed = input.build(new XmlReader(new URL(rssLink)));
             List<SyndEntry> feedItems = feed.getEntries();
 
-            //add to feed if not exists
-            FeedDbUtils.insertRssIntoFeed(rssLink, rssName);
+            //add to feed table if not exists
+            int feedId = FeedDbUtils.insertRssIntoFeedTable(rssLink, rssName);
+            logger.info("new feed id = " + feedId);
+
+            //add to subscription table for this user
+            //FeedDbUtils.insertIntoSubscriptionTable((int) request.getSession().getAttribute("userId"), feedId);
 
             /*for (SyndEntry item : feedItems) {
                 logger.info(item.getUri()); //guid

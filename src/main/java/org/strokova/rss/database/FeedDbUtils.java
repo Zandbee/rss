@@ -6,6 +6,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.strokova.rss.obj.Feed;
 import org.strokova.rss.obj.FeedItem;
+import org.strokova.rss.obj.Subscription;
 import org.strokova.rss.obj.User;
 
 import java.sql.SQLException;
@@ -117,14 +118,29 @@ public class FeedDbUtils {
     }
 
     // insert new RSS feed into feed table
-    public static void insertRssIntoFeed(String feedLink, String feedName) {
+    // @return feed.id of inserted feed
+    public static int insertRssIntoFeedTable(String feedLink, String feedName) {
         String query = "insert into feed (feed_link, feed_name) values (?, ?)";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
+        Feed feed = null;
         try {
-            run.insert(query, resultHandler, feedLink, feedName);
+            feed = run.insert(query, resultHandler, feedLink, feedName);
+
         } catch (SQLException e) {
             //TODO: can handle Duplicate entry 1062 error
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return feed.getId();
+    }
+
+    public static void insertIntoSubscriptionTable(int userId, int feedId) {
+        String query = "insert into subscription (user_id, feed_id) values (?, ?)";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<Subscription> resultHandler = new BeanHandler<>(Subscription.class);
+        try {
+            run.insert(query, resultHandler, userId, feedId);
+        } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
     }
