@@ -35,8 +35,6 @@ public class AddRssServlet extends HttpServlet {
         String rssName = request.getParameter(PARAM_RSS_NAME);
 
 
-        //add to feed_item (bulk insert)
-        //add to subscription
         //add read status?
         //check if not xml on url
         try {
@@ -51,13 +49,19 @@ public class AddRssServlet extends HttpServlet {
             //add to subscription table for this user
             FeedDbUtils.insertIntoSubscriptionTable((int) request.getSession().getAttribute("userId"), feedId);
 
-            /*for (SyndEntry item : feedItems) {
-                logger.info(item.getUri()); //guid
-                logger.info(item.getTitle()); //title
-                logger.info(item.getDescription().getValue()); //description
-                logger.info(item.getPublishedDate().toString()); //pubDate
-                logger.info(item.getLink()); //link
-            }*/
+            //add to feed_item (bulk insert)
+            Object[][] itemsArray = new Object[feedItems.size()][6];
+            int i = 0;
+            for (SyndEntry item : feedItems) {
+                itemsArray[i][0] = item.getUri(); //guid
+                itemsArray[i][1] = item.getTitle(); //title
+                itemsArray[i][2] = item.getDescription().getValue(); //description
+                itemsArray[i][3] = item.getLink(); //link
+                itemsArray[i][4] = item.getPublishedDate(); //pubDate
+                itemsArray[i][5] = feedId;
+                i++;
+            }
+            FeedDbUtils.insertIntoFeedItemTable(itemsArray);
 
             response.sendRedirect("latest.jsp");
         } catch (FeedException e) {

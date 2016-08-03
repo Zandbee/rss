@@ -22,6 +22,8 @@ public class FeedDbUtils {
     private static final Logger logger = Logger.getLogger(FeedDbUtils.class.getName());
     private static final int NO_RESULT_ID = -1;
 
+    // TODO: AsyncQueryRunner?
+
     public static List<FeedItem> getUserFeedItemsLatest(int userId) {
         String query =
                 "select * from feed_item item \n" +
@@ -138,6 +140,25 @@ public class FeedDbUtils {
         ResultSetHandler<Subscription> resultHandler = new BeanHandler<>(Subscription.class);
         try {
             run.insert(query, resultHandler, userId, feedId);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+    }
+
+    public static void insertIntoFeedItemTable(Object[][] items) {
+        String query =
+                "INSERT INTO feed_item (guid, title, description, link, pub_date, feed_id) \n" +
+                "VALUES (?, ?, ?, ?, ?, ?) \n" +
+                "ON DUPLICATE KEY UPDATE \n" +
+                "title = VALUES(title), \n" +
+                "description = VALUES(description),\n" +
+                "link = VALUES(link),\n" +
+                "pub_date = VALUES(pub_date),\n" +
+                "feed_id = VALUES(feed_id);";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
+        try {
+            run.batch(query, items);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
