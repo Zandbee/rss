@@ -15,6 +15,7 @@
             <input type="password" name="userpass" required="required" /><br><br>
             <input type="submit" value="Login" />
         </fieldset>
+        <a href="registration.jsp">Register</a>
     </form>
 </body>
 </html>

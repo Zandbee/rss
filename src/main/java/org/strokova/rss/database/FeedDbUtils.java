@@ -133,6 +133,7 @@ public class FeedDbUtils {
         return (user != null);
     }
 
+    // @return -1 if user not found
     public static int getUserId(String userName) {
         String query = "select * from user where username = ?";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
@@ -150,6 +151,9 @@ public class FeedDbUtils {
             return NO_RESULT_ID; // TODO: handle 'nothing found' cases
         }
     }
+
+    // insert new user into user table
+    // TODO public static int
 
     // insert new RSS feed into feed table
     // @return feed.id of inserted feed
