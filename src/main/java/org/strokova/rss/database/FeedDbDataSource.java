@@ -4,6 +4,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,5 +31,14 @@ public final class FeedDbDataSource {
             }
         }
         return dataSource;
+    }
+
+    public static Connection getConnection() {
+        try {
+            return getDataSource().getConnection();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting connection", e);
+        }
+        return null;
     }
 }

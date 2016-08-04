@@ -9,6 +9,7 @@ import org.strokova.rss.obj.FeedItem;
 import org.strokova.rss.obj.Subscription;
 import org.strokova.rss.obj.User;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -71,6 +72,19 @@ public class FeedDbUtils {
         return feed;
     }
 
+    public static Feed getFeedByFeedLink(String feedLink, Connection conn) {
+        String query = "select * from feed where feed_link = ?";
+        QueryRunner run = new QueryRunner();
+        ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
+        Feed feed = null;
+        try {
+            feed = run.query(conn, query, resultHandler, feedLink);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return feed;
+    }
+
     public static List<Feed> getUserFeeds(int userId) {
         String query =
                 "select * from feed\n" +
@@ -121,17 +135,17 @@ public class FeedDbUtils {
 
     // insert new RSS feed into feed table
     // @return feed.id of inserted feed
-    public static int insertRssIntoFeedTable(String feedLink, String feedName) {
+    public static int insertRssIntoFeedTable(String feedLink, String feedName, Connection conn) {
         String query = "insert into feed (feed_link, feed_name) values (?, ?)";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        QueryRunner run = new QueryRunner();
         ResultSetHandler<Feed> resultHandler = new  BeanHandler<>(Feed.class);
         try {
-            run.insert(query, resultHandler, feedLink, feedName);
+            run.insert(conn, query, resultHandler, feedLink, feedName);
         } catch (SQLException e) {
-            //TODO: can handle Duplicate entry 1062 error
+            //TODO: can handle Duplicate entry 1062 error (if nor selecting in return)
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
-        return getFeedByFeedLink(feedLink).getId();
+        return getFeedByFeedLink(feedLink, conn).getId();
     }
 
     public static void insertIntoSubscriptionTable(int userId, int feedId) {
@@ -145,7 +159,18 @@ public class FeedDbUtils {
         }
     }
 
-    public static void insertIntoFeedItemTable(Object[][] items) {
+    public static void insertIntoSubscriptionTable(int userId, int feedId, Connection conn) {
+        String query = "insert into subscription (user_id, feed_id) values (?, ?)";
+        QueryRunner run = new QueryRunner();
+        ResultSetHandler<Subscription> resultHandler = new BeanHandler<>(Subscription.class);
+        try {
+            run.insert(conn, query, resultHandler, userId, feedId);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+    }
+
+    public static void insertIntoFeedItemTable(Object[][] items, Connection conn) {
         String query =
                 "INSERT INTO feed_item (guid, title, description, link, pub_date, feed_id) \n" +
                 "VALUES (?, ?, ?, ?, ?, ?) \n" +
@@ -155,10 +180,9 @@ public class FeedDbUtils {
                 "link = VALUES(link),\n" +
                 "pub_date = VALUES(pub_date),\n" +
                 "feed_id = VALUES(feed_id);";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
+        QueryRunner run = new QueryRunner();
         try {
-            run.batch(query, items);
+            run.batch(conn, query, items);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
