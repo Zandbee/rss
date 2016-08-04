@@ -6,7 +6,6 @@ package org.strokova.rss.obj;
 public class Feed {
     private int id;
     private String feed_link;
-    private String feed_name;
 
     public Feed() {}
 
@@ -26,11 +25,4 @@ public class Feed {
         this.feed_link = feed_link;
     }
 
-    public String getFeed_name() {
-        return feed_name;
-    }
-
-    public void setFeed_name(String feed_name) {
-        this.feed_name = feed_name;
-    }
 }

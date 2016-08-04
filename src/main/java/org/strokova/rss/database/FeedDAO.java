@@ -5,6 +5,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import org.strokova.rss.obj.FeedItem;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,11 +29,11 @@ public class FeedDAO {
                 conn.setAutoCommit(false);
 
                 //add to feed table if not exists
-                int feedId = FeedDbUtils.insertRssIntoFeedTable(rssLink, rssName, conn);
+                int feedId = FeedDbUtils.insertRssIntoFeedTable(rssLink, conn);
                 logger.info("new feed id = " + feedId);
 
                 //add to subscription table for this user
-                FeedDbUtils.insertIntoSubscriptionTable(userId, feedId, conn);
+                FeedDbUtils.insertIntoSubscriptionTable(userId, feedId, rssName, conn);
 
                 //add to feed_item (bulk insert)
                 SyndFeedInput input = new SyndFeedInput();
@@ -43,7 +44,11 @@ public class FeedDAO {
                 for (SyndEntry item : feedItems) {
                     itemsArray[i][0] = item.getUri(); //guid
                     itemsArray[i][1] = item.getTitle(); //title
-                    itemsArray[i][2] = item.getDescription().getValue(); //description
+                    String description = item.getDescription().getValue();
+                    if (description.length() > FeedItem.COL_DESCRIPTION_LENGTH) {
+                        description = description.substring(0, FeedItem.COL_DESCRIPTION_LENGTH - 1);
+                    }
+                    itemsArray[i][2] = description; //description
                     itemsArray[i][3] = item.getLink(); //link
                     itemsArray[i][4] = item.getPublishedDate(); //pubDate
                     itemsArray[i][5] = feedId;

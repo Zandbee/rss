@@ -1,14 +1,15 @@
 package org.strokova.rss.obj;
 
 /**
- * @author vstrokova, 03.08.2016.
+ * @author vstrokova, 04.08.2016.
  */
-public class Subscription {
+public class SubscriptionWithFeed {
     private int user_id;
     private int feed_id;
+    private String feed_link;
     private String feed_name;
 
-    public Subscription() {
+    public SubscriptionWithFeed() {
     }
 
     public int getUser_id() {
@@ -25,6 +26,14 @@ public class Subscription {
 
     public void setFeed_id(int feed_id) {
         this.feed_id = feed_id;
+    }
+
+    public String getFeed_link() {
+        return feed_link;
+    }
+
+    public void setFeed_link(String feed_link) {
+        this.feed_link = feed_link;
     }
 
     public String getFeed_name() {

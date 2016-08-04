@@ -6,6 +6,8 @@ import java.util.Date;
  * Created by Veronika on 7/28/2016.
  */
 public class FeedItem {
+    public static final int COL_DESCRIPTION_LENGTH = 3000;
+
     private String guid;
     private String title;
     private String description;

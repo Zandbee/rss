@@ -17,8 +17,8 @@ section {
 
     <ul>
         <li><a href="latest.jsp">All</a></li>
-        <c:forEach var="feed" items="${feedDAO.getUserFeeds(sessionScope.userId)}">
-            <li><a href="feed.jsp?id=${feed.feed_link}">${feed.feed_name}</a></li>
+        <c:forEach var="subscription" items="${feedDAO.getUserSubscriptionsWithFeeds(sessionScope.userId)}">
+            <li><a href="feed.jsp?id=${subscription.feed_link}">${subscription.feed_name}</a></li>
         </c:forEach>
     </ul>
 

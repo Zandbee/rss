@@ -4,13 +4,13 @@
 <html>
 <body>
     <jsp:include page="rssList.jsp" />
-    <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
+    <jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
     <section>
         <c:set var="feedLink" value="${param.id}" />
-        <c:set var="feed" value="${feedDAO.getFeedByFeedLink(feedLink)}"/>
+        <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
         <h2>${feed.feed_name}</h2>
         <table>
-            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLink(feedLink)}">
+            <c:forEach var="feedItem" items="${feedDB.getFeedItemsByFeedLink(feedLink)}">
                 <tr><td>
                     <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
                     <p>${feedItem.description}</p>
