@@ -161,7 +161,6 @@ public class FeedDbUtils {
         try {
             run.insert(conn, query, resultHandler, feedLink);
         } catch (SQLException e) {
-            //TODO: can handle Duplicate entry 1062 error (if nor selecting in return)
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
         return getFeedByFeedLink(feedLink, conn).getId();

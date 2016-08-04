@@ -1,6 +1,8 @@
 package org.strokova.rss.obj;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Veronika on 7/28/2016.
@@ -64,5 +66,11 @@ public class FeedItem {
 
     public void setPub_date(Date pub_date) {
         this.pub_date = pub_date;
+    }
+
+    public String getFormattedDate() {
+        String datePattern = "EEE, MMM d, h:mm a";
+        SimpleDateFormat formatter = new SimpleDateFormat(datePattern, Locale.getDefault());
+        return formatter.format(pub_date);
     }
 }

@@ -14,6 +14,7 @@
         <c:forEach var="feedItem" items="${feedDAO.getUserFeedItemsLatest(sessionScope.userId)}">
             <tr><td>
                 <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
+                <small style="color:gray;">${feedItem.formattedDate}</small>
                 <p>${feedItem.description}</p>
             </td></tr>
         </c:forEach>
