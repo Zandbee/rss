@@ -27,6 +27,9 @@
         </table>
     </c:otherwise>
     </c:choose>
+
+    <jsp:include page="pagination.jspf" />
+
 </section>
 </body>
 </html>
