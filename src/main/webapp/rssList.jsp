@@ -14,13 +14,16 @@ section {
 <body>
     <nav>
     <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
+    <c:set var="subscriptions" value="${feedDAO.getUserSubscriptionsWithFeeds(sessionScope.userId)}" scope="page" />
 
+    <c:if test="${!empty subscriptions}">
     <ul>
         <li><a href="latest.jsp">All</a></li>
-        <c:forEach var="subscription" items="${feedDAO.getUserSubscriptionsWithFeeds(sessionScope.userId)}">
+        <c:forEach var="subscription" items="${subscriptions}">
             <li><a href="feed.jsp?id=${subscription.feed_link}">${subscription.feed_name}</a></li>
         </c:forEach>
     </ul>
+    </c:if>
 
     <br>
     <form action="addRss" method="post" accept-charset="UTF-8">

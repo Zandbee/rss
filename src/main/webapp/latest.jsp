@@ -9,16 +9,24 @@
 <jsp:include page="rssList.jsp" />
 <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
 <section>
-    <h2>All</h2>
-    <table>
-        <c:forEach var="feedItem" items="${feedDAO.getUserFeedItemsLatest(sessionScope.userId)}">
-            <tr><td>
-                <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
-                <small style="color:gray;">${feedItem.formattedDate}</small>
-                <p>${feedItem.description}</p>
-            </td></tr>
-        </c:forEach>
-    </table>
+    <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatest(sessionScope.userId)}" />
+    <c:choose>
+    <c:when test="${empty feedItems}">
+        <b>Add RSS feeds to see the content here</b>
+    </c:when>
+    <c:otherwise>
+        <h2>All</h2>
+        <table>
+            <c:forEach var="feedItem" items="${feedItems}">
+                <tr><td>
+                    <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
+                    <small style="color:gray;">${feedItem.formattedDate}</small>
+                    <p>${feedItem.description}</p>
+                </td></tr>
+            </c:forEach>
+        </table>
+    </c:otherwise>
+    </c:choose>
 </section>
 </body>
 </html>

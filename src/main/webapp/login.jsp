@@ -13,9 +13,10 @@
             <input type="text" name="username" required="required" /><br>
             Password:<br>
             <input type="password" name="userpass" required="required" /><br><br>
-            <input type="submit" value="Login" />
+            <input type="submit" value="Login" /><br><br>
+            <a href="registration.jsp">Register</a>
         </fieldset>
-        <a href="registration.jsp">Register</a>
+
     </form>
 </body>
 </html>

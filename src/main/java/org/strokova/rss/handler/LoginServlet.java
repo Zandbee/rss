@@ -24,8 +24,6 @@ public class LoginServlet extends HttpServlet {
         String userName = request.getParameter("username"); //TODO: extract String const
         String userPassword = request.getParameter("userpass");
 
-        response.setContentType("text/html");
-
         if (FeedDbUtils.isValidUser(userName, userPassword)) {
             HttpSession session = request.getSession(true);
             int userId = FeedDbUtils.getUserId(userName);

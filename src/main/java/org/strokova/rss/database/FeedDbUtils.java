@@ -153,7 +153,17 @@ public class FeedDbUtils {
     }
 
     // insert new user into user table
-    // TODO public static int
+    public static int insertIntoUserTable (String username, String password) {
+        String query = "insert into user (username, password) values (?, ?)";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
+        try {
+            run.insert(query, resultHandler, username, password);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return getUserId(username);
+    }
 
     // insert new RSS feed into feed table
     // @return feed.id of inserted feed
