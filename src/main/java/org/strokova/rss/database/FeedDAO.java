@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 public class FeedDAO {
     private static final Logger logger = Logger.getLogger(FeedDAO.class.getName());
 
+    private static final int ITEMS_PER_PAGE= 20;
+
     public static void addRssForUser(String rssLink, String rssName, int userId) throws IOException, SQLException {
         Connection conn = FeedDbDataSource.getConnection();
         if (conn != null) {
@@ -70,5 +72,31 @@ public class FeedDAO {
                 conn.close();
             }
         }
+    }
+
+    public static int getPageCountInLatest(int userId) {
+        int feedItemsCount = FeedDbUtils.getUserFeedItemsCount(userId);
+        int pageCount = feedItemsCount / ITEMS_PER_PAGE;
+        if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public static int getPageCountByFeedLink(String feedLink) {
+        int feedItemsCount = FeedDbUtils.getFeedItemsCountByFeedLink(feedLink);
+        int pageCount = feedItemsCount / ITEMS_PER_PAGE;
+        if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public static List<FeedItem> getUserFeedItemsLatestPage(int userId, int offset) {
+        return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+    }
+
+    public static List<FeedItem> getFeedItemsByFeedLinkPage(String feedLink, int offset) {
+        return FeedDbUtils.getFeedItemsByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
     }
 }

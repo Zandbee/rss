@@ -13,8 +13,8 @@ section {
 </style>
 <body>
     <nav>
-    <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
-    <c:set var="subscriptions" value="${feedDAO.getUserSubscriptionsWithFeeds(sessionScope.userId)}" scope="page" />
+    <jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
+    <c:set var="subscriptions" value="${feedDB.getUserSubscriptionsWithFeeds(sessionScope.userId)}" scope="page" />
 
     <c:if test="${!empty subscriptions}">
     <ul>

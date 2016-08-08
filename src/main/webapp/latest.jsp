@@ -4,12 +4,18 @@
 <html>
 <head>
     <title>RSS Reader</title>
+    <style>
+    div.pagination {
+        display: inline;
+    }
+    </style>
 </head>
 <body>
 <jsp:include page="rssList.jsp" />
-<jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
+<jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
+<jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 <section>
-    <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatest(sessionScope.userId)}" />
+    <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatestPage(sessionScope.userId, param.page)}" />
     <c:choose>
     <c:when test="${empty feedItems}">
         <b>Add RSS feeds to see the content here</b>
@@ -28,7 +34,12 @@
     </c:otherwise>
     </c:choose>
 
-    <jsp:include page="pagination.jspf" />
+    <c:set var="pageCount" value="${feedDAO.getPageCountInLatest(sessionScope.userId)}" />
+    <c:forEach var="i" begin="1" end="${pageCount}">
+        <div class="pagination">
+            <a href="latest.jsp?page=${i}">${i}</a>
+        </div>
+    </c:forEach>
 
 </section>
 </body>
