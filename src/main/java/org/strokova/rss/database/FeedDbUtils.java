@@ -40,13 +40,32 @@ public class FeedDbUtils {
         return feedItems;
     }
 
+    public static List<FeedItem> getUserFeedItemsLatest(int userId, int offset, int limit) {
+        String query =
+                "select * from feed_item item\n" +
+                        "join subscription sub\n" +
+                        "on item.feed_id = sub.feed_id\n" +
+                        "where sub.user_id = ?\n" +
+                        "order by item.pub_date desc\n" +
+                        "limit ?, ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
+        List<FeedItem> feedItems = null;
+        try {
+            feedItems = run.query(query, resultHandler, userId, offset, limit);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return feedItems;
+    }
+
     public static List<FeedItem> getFeedItemsByFeedLink(String feedLink) {
         String query =
                 "select * from feed_item\n" +
                         "join feed\n" +
                         "on feed_item.feed_id = feed.id\n" +
                         "where feed.feed_link = ?\n" +
-                        "order by feed_item.pub_date desc"; //TODO: order by date
+                        "order by feed_item.pub_date desc";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
         List<FeedItem> feedItems = null;
@@ -56,6 +75,41 @@ public class FeedDbUtils {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
         return feedItems;
+    }
+
+    // Get the number of feed items for a user. Returns 0 if no feed items found
+    public static int getUserFeedItemsCount(int userId) {
+        String query =
+                "select count(*) as count from feed_item item\n" +
+                        "join subscription sub\n" +
+                        "on item.feed_id = sub.feed_id\n" +
+                        "where sub.user_id = ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
+        try {
+            RowCount rows = run.query(query, resultHandler, userId);
+            return rows.getCount();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return 0;
+    }
+
+    // Get the number of feed items for a feed. Returns 0 if no feed items found
+    public static int getFeedItemsCountByFeedLink(String feedLink) {
+        String query =
+                "select count(*) as count from feed_item\n" +
+                        "join feed\n" +
+                        "on feed_item.feed_id = feed.id\n" +
+                        "where feed.feed_link = ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
+        try {
+            return run.query(query, resultHandler, feedLink).getCount();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return 0;
     }
 
     public static Feed getFeedByFeedLink(String feedLink) {

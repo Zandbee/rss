@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Veronika on 7/29/2016.
+ * @author Veronika, 7/29/2016.
  */
 public final class FeedDbDataSource {
     private static final Logger logger = Logger.getLogger(FeedDbDataSource.class.getName());

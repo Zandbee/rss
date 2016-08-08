@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 public class FeedDAO {
     private static final Logger logger = Logger.getLogger(FeedDAO.class.getName());
 
+    private static final int ITEMS_PER_PAGE= 20;
+
     public static void addRssForUser(String rssLink, String rssName, int userId) throws IOException, SQLException {
         Connection conn = FeedDbDataSource.getConnection();
         if (conn != null) {
@@ -70,5 +72,18 @@ public class FeedDAO {
                 conn.close();
             }
         }
+    }
+
+    public static int getPageCount(int userId) {
+        int feedItemsCount = FeedDbUtils.getUserFeedItemsCount(userId);
+        int pageCount = feedItemsCount / ITEMS_PER_PAGE;
+        if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public static List<FeedItem> getUserFeedItemsLatest(int userId, int offset) {
+        return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
     }
 }
