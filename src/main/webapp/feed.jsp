@@ -19,7 +19,7 @@
         <form action="" style="display: inline;">
             <input type="submit" value="Edit" />
         </form>
-        <form action="feed.jsp?remove=${feedLink}" style="display: inline;" method="POST">
+        <form action="feed.jsp?remove=${feedLink}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete?');">
             <input type="submit" value="Remove" />
         </form>
         <br><br>
