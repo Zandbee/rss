@@ -15,6 +15,15 @@
         <c:set var="feedLink" value="${param.id}" />
         <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
         <h2>${feed.feed_name}</h2>
+
+        <form action="" style="display: inline;">
+            <input type="submit" value="Edit" />
+        </form>
+        <form action="feed.jsp?remove=${feedLink}" style="display: inline;" method="POST">
+            <input type="submit" value="Remove" />
+        </form>
+        <br><br>
+
         <table>
             <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(feedLink, param.page)}">
                 <tr><td>

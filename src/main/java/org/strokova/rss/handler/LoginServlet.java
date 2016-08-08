@@ -4,7 +4,6 @@ import org.strokova.rss.database.FeedDbUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +15,7 @@ import java.io.PrintWriter;
  * author: Veronika, 7/31/2016.
  */
 public class LoginServlet extends HttpServlet {
-    public static final String SESSION_ATTRIBUTE_USER_ID = "userId";
+    public static final String SESSION_ATTR_USER_ID = "userId";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +26,7 @@ public class LoginServlet extends HttpServlet {
         if (FeedDbUtils.isValidUser(userName, userPassword)) {
             HttpSession session = request.getSession(true);
             int userId = FeedDbUtils.getUserId(userName);
-            session.setAttribute(SESSION_ATTRIBUTE_USER_ID, userId);
+            session.setAttribute(SESSION_ATTR_USER_ID, userId);
             response.sendRedirect("latest.jsp");
         } else {
             PrintWriter out = response.getWriter();

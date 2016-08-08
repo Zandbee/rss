@@ -270,6 +270,21 @@ public class FeedDbUtils {
         }
     }
 
+    public static void deleteFromSubscriptionTable(int userId, String feedLink) {
+        String query =
+                "delete subscription from subscription\n" +
+                "join feed\n" +
+                "on subscription.feed_id = feed.id\n" +
+                "where feed.feed_link = ?\n" +
+                "and subscription.user_id = ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        try {
+            run.update(query, feedLink, userId);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+    }
+
     // insert feed items when a new feed is added
     // TODO update items each time
     public static void insertIntoFeedItemTable(Object[][] items, Connection conn) {
