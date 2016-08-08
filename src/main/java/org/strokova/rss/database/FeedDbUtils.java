@@ -22,6 +22,7 @@ public class FeedDbUtils {
 
     // TODO: AsyncQueryRunner?
 
+    // @return all user's feed items (articles) ordered by date in descending order
     public static List<FeedItem> getUserFeedItemsLatest(int userId) {
         String query =
                 "select * from feed_item item\n" +
@@ -40,6 +41,7 @@ public class FeedDbUtils {
         return feedItems;
     }
 
+    // @return a subset of <limit> user's feed items (articles) ordered by date in descending order with <offset>
     public static List<FeedItem> getUserFeedItemsLatest(int userId, int offset, int limit) {
         String query =
                 "select * from feed_item item\n" +
@@ -71,6 +73,25 @@ public class FeedDbUtils {
         List<FeedItem> feedItems = null;
         try {
             feedItems = run.query(query, resultHandler, feedLink);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return feedItems;
+    }
+
+    public static List<FeedItem> getFeedItemsByFeedLink(String feedLink, int offset, int limit) {
+        String query =
+                "select * from feed_item\n" +
+                        "join feed\n" +
+                        "on feed_item.feed_id = feed.id\n" +
+                        "where feed.feed_link = ?\n" +
+                        "order by feed_item.pub_date desc\n" +
+                        "limit ?, ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
+        List<FeedItem> feedItems = null;
+        try {
+            feedItems = run.query(query, resultHandler, feedLink, offset, limit);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

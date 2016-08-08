@@ -74,7 +74,7 @@ public class FeedDAO {
         }
     }
 
-    public static int getPageCount(int userId) {
+    public static int getPageCountInLatest(int userId) {
         int feedItemsCount = FeedDbUtils.getUserFeedItemsCount(userId);
         int pageCount = feedItemsCount / ITEMS_PER_PAGE;
         if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
@@ -83,7 +83,20 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItem> getUserFeedItemsLatest(int userId, int offset) {
+    public static int getPageCountByFeedLink(String feedLink) {
+        int feedItemsCount = FeedDbUtils.getFeedItemsCountByFeedLink(feedLink);
+        int pageCount = feedItemsCount / ITEMS_PER_PAGE;
+        if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
+            pageCount++;
+        }
+        return pageCount;
+    }
+
+    public static List<FeedItem> getUserFeedItemsLatestPage(int userId, int offset) {
         return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+    }
+
+    public static List<FeedItem> getFeedItemsByFeedLinkPage(String feedLink, int offset) {
+        return FeedDbUtils.getFeedItemsByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
     }
 }
