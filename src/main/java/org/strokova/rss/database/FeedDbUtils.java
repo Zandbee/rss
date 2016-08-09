@@ -301,7 +301,7 @@ public final class FeedDbUtils {
 
     // insert feed items when a new feed is added
     // TODO update items each time
-    public static void insertIntoFeedItemTable(Object[][] items, Connection conn) {
+    public static void insertIntoFeedItemTable(Object[][] items, Connection conn) throws SQLException {
         String query =
                 "INSERT INTO feed_item (guid, title, description, link, pub_date, feed_id) \n" +
                 "VALUES (?, ?, ?, ?, ?, ?) \n" +
@@ -312,10 +312,6 @@ public final class FeedDbUtils {
                 "pub_date = VALUES(pub_date),\n" +
                 "feed_id = VALUES(feed_id);";
         QueryRunner run = new QueryRunner();
-        try {
-            run.batch(conn, query, items);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        run.batch(conn, query, items);
     }
 }

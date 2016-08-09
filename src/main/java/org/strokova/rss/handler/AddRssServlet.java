@@ -19,6 +19,7 @@ public class AddRssServlet extends HttpServlet {
 
     private static final String PARAM_RSS_LINK = "rss_link";
     private static final String PARAM_RSS_NAME = "rss_name";
+    private static final String ATTR_USER_ID = "userId";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,7 +28,7 @@ public class AddRssServlet extends HttpServlet {
         String rssName = request.getParameter(PARAM_RSS_NAME);
 
         try {
-            FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute("userId"));
+            FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(ATTR_USER_ID));
             response.sendRedirect("latest.jsp");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error processing feed", e);

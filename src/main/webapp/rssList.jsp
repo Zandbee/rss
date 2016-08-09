@@ -18,7 +18,12 @@ section {
 
     <c:if test="${!empty subscriptions}">
     <ul>
+        <form action="updateUserFeedItems" method="post" accept-charset="UTF-8">
+            <input type="submit" value="Update all" />
+        </form>
+
         <li><a href="latest.jsp">All</a></li>
+
         <c:forEach var="subscription" items="${subscriptions}">
             <li><a href="feed.jsp?id=${subscription.feed_link}">${subscription.feed_name}</a></li>
         </c:forEach>

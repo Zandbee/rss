@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 /**
  * @author vstrokova, 09.08.2016.
