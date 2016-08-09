@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * author: Veronika, 7/28/2016.
  */
 
-public class FeedDbUtils {
+public final class FeedDbUtils {
     private static final Logger logger = Logger.getLogger(FeedDbUtils.class.getName());
     private static final int NO_RESULT_ID = -1;
 
@@ -280,6 +280,20 @@ public class FeedDbUtils {
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         try {
             run.update(query, feedLink, userId);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+    }
+
+    public static void renameSubscriptionInSubscriptionTable(int userId, String feedLink, String feedName) {
+        String query =
+                "update subscription \n" +
+                "join feed on subscription.feed_id = feed.id\n" +
+                "set feed_name = ?\n" +
+                "where subscription.user_id = ? and feed.feed_link = ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        try {
+            run.update(query, feedName, userId, feedLink);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
