@@ -6,6 +6,7 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.strokova.rss.obj.FeedItem;
+import org.strokova.rss.obj.FeedItemWithReadStatus;
 import org.strokova.rss.obj.SubscriptionWithFeed;
 
 import java.io.IOException;
@@ -154,11 +155,18 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItem> getUserFeedItemsLatestPage(int userId, int offset) {
+    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset) {
         if (offset != 0) {
             offset--;
         }
-        return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+        //return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+        List<FeedItemWithReadStatus> items = null;
+        try {
+            items = FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error executing SQL", e);
+        }
+        return items;
     }
 
     public static List<FeedItem> getFeedItemsByFeedLinkPage(String feedLink, int offset) {

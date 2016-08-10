@@ -6,6 +6,12 @@
     div.pagination {
         display: inline;
     }
+    .itemName.0{
+        color:green;
+    }
+    .itemName.1{
+        color:red;
+    }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
@@ -38,7 +44,7 @@ $(document).ready(function(){
         <table>
             <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(feedLink, param.page)}">
                 <tr><td>
-                    <h3><a href="${feedItem.link}" style="display: inline;">${feedItem.title}</a></h3>
+                    <h3><a href="${feedItem.link}" style="display: inline;" >${feedItem.title}</a></h3>
                     <form action="latest.jsp?markRead=${feedItem.guid}" method="post" accept-charset="UTF-8" style="display: inline;">
                         <input type="submit" value="Mark as read" />
                     </form>
