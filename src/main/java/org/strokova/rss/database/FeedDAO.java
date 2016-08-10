@@ -169,14 +169,14 @@ public class FeedDAO {
         return items;
     }
 
-    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset) {
+    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order) {
         if (offset != 0) {
             offset--;
         }
         //return FeedDbUtils.getFeedItemsByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
         List<FeedItemWithReadStatus> items = null;
         try {
-            items = FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, userId);
+            items = FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, userId, order);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

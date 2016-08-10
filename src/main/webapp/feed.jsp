@@ -26,7 +26,23 @@ $(document).ready(function(){
     <jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
     <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
     <section>
-        <c:set var="feedLink" value="${param.id}" />
+
+        <c:set var="feedLink" value="${param.id}"/>
+
+        <c:set var="order" value="${param.order}" />
+        <form action="feed.jsp?">
+            <input type="text" name="id" value="${feedLink}" hidden>
+        <c:choose>
+        <c:when test="${!empty order}">
+            <input type="checkbox" name="order" value="asc" checked> Oldest first
+        </c:when>
+        <c:otherwise>
+            <input type="checkbox" name="order" value="asc"> Oldest first
+        </c:otherwise>
+        </c:choose>
+            <input type="submit" value="Apply" />
+        </form>
+
         <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
         <h2>${feed.feed_name}</h2>
 
@@ -37,7 +53,7 @@ $(document).ready(function(){
         <br><br>
 
         <table>
-            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(sessionScope.userId, feedLink, param.page)}">
+            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(sessionScope.userId, feedLink, param.page, order)}">
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
@@ -53,7 +69,16 @@ $(document).ready(function(){
         <c:set var="pageCount" value="${feedDAO.getPageCountByFeedLink(feedLink)}" />
         <c:forEach var="i" begin="1" end="${pageCount}">
             <div class="pagination">
+                <!-- HOW TO GET 'feed.jsp' FROM URL programmatically??? -->
+                <!-- MOVE PAGINATION TO a separate jspf -->
+            <c:choose>
+            <c:when test="${empty order}">
                 <a href="feed.jsp?id=${feedLink}&page=${i}">${i}</a>
+            </c:when>
+            <c:otherwise>
+                <a href="feed.jsp?id=${feedLink}&order=${order}&page=${i}">${i}</a>
+            </c:otherwise>
+            </c:choose>
             </div>
         </c:forEach>
 

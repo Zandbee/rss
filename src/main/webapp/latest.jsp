@@ -23,8 +23,11 @@
 <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 <section>
 
+    <!-- HOW TO GET 'latest.jsp' FROM URL programmatically??? -->
+    <!-- MOVE ORDER TO RSS LIST -->
+
     <c:set var="order" value="${param.order}" />
-    <form action="latest.jsp?page=${param.page}">
+    <form action="latest.jsp?">
     <c:choose>
     <c:when test="${!empty order}">
         <input type="checkbox" name="order" value="asc" checked> Oldest first

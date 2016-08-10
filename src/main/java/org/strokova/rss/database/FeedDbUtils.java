@@ -125,7 +125,13 @@ public final class FeedDbUtils {
         return feedItems;
     }
 
-    public static List<FeedItemWithReadStatus> getFeedItemsWithReadStatusByFeedLink(String feedLink, int offset, int limit, int userId) throws SQLException {
+    public static List<FeedItemWithReadStatus> getFeedItemsWithReadStatusByFeedLink(String feedLink, int offset, int limit, int userId, String userOrder) throws SQLException {
+        String order;
+        if (userOrder.equals(USER_ORDER_ASC)) {
+            order = ORDER_ASC;
+        } else {
+            order = ORDER_DESC;
+        }
         String query =
                 "select i.guid, i.title, i.description, i.link, i.pub_date, i.feed_id, r.is_read\n" +
                 "from feed_item i\n" +
@@ -134,7 +140,7 @@ public final class FeedDbUtils {
                 "left join item_read_status r\n" +
                 "on i.guid = r.item_guid\n" +
                 "where feed.feed_link = ? and r.user_id = ?\n" +
-                "order by i.pub_date desc\n" +
+                "order by i.pub_date " + order + "\n" +
                 "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler= new BeanListHandler<>(FeedItemWithReadStatus.class);
