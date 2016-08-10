@@ -6,10 +6,10 @@
     div.pagination {
         display: inline;
     }
-    .itemName.0{
+    .false{
         color:green;
     }
-    .itemName.1{
+    .true{
         color:red;
     }
 </style>
@@ -35,20 +35,16 @@ $(document).ready(function(){
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <form action="latest.jsp?page=${param.page}" method="post" accept-charset="UTF-8">
-            <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
-            <input type="submit" value="Mark as read" />
-        </form>
-        <br><br>
 
         <table>
-            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(feedLink, param.page)}">
+            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(sessionScope.userId, feedLink, param.page)}">
                 <tr><td>
-                    <h3><a href="${feedItem.link}" style="display: inline;" >${feedItem.title}</a></h3>
-                    <form action="latest.jsp?markRead=${feedItem.guid}" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
+                    <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
+                    <form action="feed.jsp?id=${param.id}&page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
+                        <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
                         <input type="submit" value="Mark as read" />
                     </form>
-                    <small style="color:gray;">${feedItem.formattedDate}</small>
                     <p>${feedItem.description}</p>
                 </td></tr>
             </c:forEach>

@@ -9,21 +9,12 @@
         display: inline;
     }
     .false{
-            color:green;
-        }
+        color:green;
+    }
     .true{
-            color:red;
-        }
+        color:red;
+    }
     </style>
-
-    <!-- trying to call Filter without reloading the page -->
-    <!--script src="http://code.jquery.com/jquery-latest.min.js"></script>
-            <script>
-                $(document).on("submit", "#markReadForm", function() {
-                    $.post();
-                });
-    </script-->
-
 
 </head>
 <body>
@@ -43,7 +34,7 @@
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="latest.jsp?page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <form action="fee.jsp?page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
                         <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
                         <input type="submit" value="Mark as read" />
                     </form>

@@ -61,6 +61,7 @@ public final class FeedDbUtils {
         return feedItems;
     }
 
+    // @return a subset of <limit> user's feed items (articles) with a read status ordered by date in descending order with <offset>
     public static List<FeedItemWithReadStatus> getUserFeedItemsWithReadStatusLatest(int userId, int offset, int limit) throws SQLException {
         String query =
                 "select i.guid, i.title, i.description, i.link, i.pub_date, i.feed_id, r.is_read\n" +
@@ -112,6 +113,22 @@ public final class FeedDbUtils {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
         return feedItems;
+    }
+
+    public static List<FeedItemWithReadStatus> getFeedItemsWithReadStatusByFeedLink(String feedLink, int offset, int limit, int userId) throws SQLException {
+        String query =
+                "select i.guid, i.title, i.description, i.link, i.pub_date, i.feed_id, r.is_read\n" +
+                "from feed_item i\n" +
+                "left join feed\n" +
+                "on i.feed_id = feed.id\n" +
+                "left join item_read_status r\n" +
+                "on i.guid = r.item_guid\n" +
+                "where feed.feed_link = ? and r.user_id = ?\n" +
+                "order by i.pub_date desc\n" +
+                "limit ?, ?;";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler= new BeanListHandler<>(FeedItemWithReadStatus.class);
+        return run.query(query, resultHandler, feedLink, userId, offset, limit);
     }
 
     // Get the number of feed items for a user. Returns 0 if no feed items found
