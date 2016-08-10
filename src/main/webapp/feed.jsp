@@ -29,16 +29,19 @@ $(document).ready(function(){
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <form id="editBlock" action="feed.jsp?id=${param.id}&rename=${feedLink}" style="display: none;" method="POST" >
-            <input type="text" name="newFeedName" required="required" />
-            <input type="submit" value="Update RSS name" />
+        <form action="latest.jsp?page=${param.page}" method="post" accept-charset="UTF-8">
+            <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
+            <input type="submit" value="Mark as read" />
         </form>
         <br><br>
 
         <table>
             <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(feedLink, param.page)}">
                 <tr><td>
-                    <h3><a href="${feedItem.link}">${feedItem.title}</a></h3>
+                    <h3><a href="${feedItem.link}" style="display: inline;">${feedItem.title}</a></h3>
+                    <form action="latest.jsp?markRead=${feedItem.guid}" method="post" accept-charset="UTF-8" style="display: inline;">
+                        <input type="submit" value="Mark as read" />
+                    </form>
                     <small style="color:gray;">${feedItem.formattedDate}</small>
                     <p>${feedItem.description}</p>
                 </td></tr>

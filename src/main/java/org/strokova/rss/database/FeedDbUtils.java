@@ -285,6 +285,7 @@ public final class FeedDbUtils {
         }
     }
 
+    // rename into ->update<-SubscriptionInSubscriptionTable
     public static void renameSubscriptionInSubscriptionTable(int userId, String feedLink, String feedName) {
         String query =
                 "update subscription \n" +
@@ -321,5 +322,14 @@ public final class FeedDbUtils {
                 "on duplicate key update item_guid = item_guid;";
         QueryRunner run = new QueryRunner();
         run.batch(conn, query, userItemReadStatuses);
+    }
+
+    public static void updateItemReadStatus(int userId, String guid) throws SQLException {
+        String query =
+                "update item_read_status\n" +
+                "set is_read = not is_read\n" +
+                "where user_id = ? and item_guid = ?";
+        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
+        run.update(query, userId, guid);
     }
 }

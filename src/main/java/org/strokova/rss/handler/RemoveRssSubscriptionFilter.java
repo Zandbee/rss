@@ -30,8 +30,8 @@ public class RemoveRssSubscriptionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request.getParameter(PARAM_REMOVE_LINK) != null) {
-            String feedLink = request.getParameter(PARAM_REMOVE_LINK);
+        String feedLink = request.getParameter(PARAM_REMOVE_LINK);
+        if (feedLink != null) {
             int userId = (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID);
             FeedDbUtils.deleteFromSubscriptionTable(userId, feedLink);
             ((HttpServletResponse) response).sendRedirect("latest.jsp");

@@ -34,35 +34,13 @@ public class RenameRssSubscriptionFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request.getParameter(PARAM_RENAME_LINK) != null) {
-            String feedLink = request.getParameter(PARAM_RENAME_LINK);
+        String feedLink = request.getParameter(PARAM_RENAME_LINK);
+        if (feedLink != null) {
             String newFeedName = request.getParameter(PARAM_NEW_FEED_NAME);
             int userId = (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID);
             FeedDbUtils.renameSubscriptionInSubscriptionTable(userId, feedLink, newFeedName);
-            // TODO use WrappedRequest and doFilter instead of redirect
             ((HttpServletResponse) response).sendRedirect("feed.jsp?id=" + request.getParameter("id"));
         }
         chain.doFilter(request, response);
-    }
-
-    private class WrappedRequest extends HttpServletRequestWrapper {
-
-        /**
-         * Constructs a request object wrapping the given request.
-         * @param request
-         * @throws IllegalArgumentException if the request is null
-         */
-        public WrappedRequest(HttpServletRequest request) {
-            super(request);
-        }
-
-        @Override
-        public Map<String, String[]> getParameterMap() {
-            Map<String, String[]> params = new TreeMap<>();
-            params.putAll(super.getParameterMap());
-            params.remove(PARAM_RENAME_LINK);
-            params.remove(PARAM_NEW_FEED_NAME);
-            return Collections.unmodifiableMap(params);
-        }
     }
 }
