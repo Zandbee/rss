@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,9 +40,12 @@ public class FeedDAO {
                 FeedDbUtils.insertIntoSubscriptionTable(userId, feedId, rssName, conn);
 
                 //add to feed_item (bulk insert)
-                FeedDbUtils.insertIntoFeedItemTable(getFeedItems(rssLink, feedId), conn);
+                Object[][] feedItems = getFeedItems(rssLink, feedId);
+                FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
 
-                //TODO add read status?
+                //add to item_read_status (bulk insert, false for new)
+                FeedDbUtils.insertIntoItemReadStatusTable(getUserItemReadStatuses(
+                        getFeedItemsGuids(feedItems), userId), conn);
 
                 // commit transaction
                 conn.commit();
@@ -84,6 +88,27 @@ public class FeedDAO {
         return null;
     }
 
+    private static ArrayList<String> getFeedItemsGuids(Object[][] feedItems) {
+        int itemsCount = feedItems.length;
+        ArrayList<String> guids = new ArrayList<>(itemsCount);
+        for (Object[] feedItem : feedItems) {
+            guids.add(feedItem[0].toString());
+        }
+        return guids;
+    }
+
+    private static Object[][] getUserItemReadStatuses(ArrayList<String> itemGuids, int userId) {
+        Object[][] userItemReadStatuses = new Object[itemGuids.size()][3];
+        int i = 0;
+        for (String guid : itemGuids) {
+            userItemReadStatuses[i][0] = userId;
+            userItemReadStatuses[i][1] = guid;
+            userItemReadStatuses[i][2] = Boolean.FALSE;
+            i++;
+        }
+        return userItemReadStatuses;
+    }
+
     public static void updateRssItemsForUser(int userId) throws SQLException {
         // get user's subscriptions
         List<SubscriptionWithFeed> subscriptions = FeedDbUtils.getUserSubscriptionsWithFeeds(userId);
@@ -94,9 +119,13 @@ public class FeedDAO {
                 conn.setAutoCommit(false);
 
                 for (SubscriptionWithFeed subscription : subscriptions) {
-                    FeedDbUtils.insertIntoFeedItemTable(
-                            getFeedItems(subscription.getFeed_link(), subscription.getFeed_id()), conn);
+                    Object[][] feedItems = getFeedItems(subscription.getFeed_link(), subscription.getFeed_id());
+                    FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
+
+                    FeedDbUtils.insertIntoItemReadStatusTable(getUserItemReadStatuses(
+                            getFeedItemsGuids(feedItems), userId), conn);
                 }
+
                 conn.commit();
             } catch (SQLException e) {
                 conn.rollback();

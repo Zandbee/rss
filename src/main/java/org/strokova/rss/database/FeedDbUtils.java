@@ -29,7 +29,7 @@ public final class FeedDbUtils {
                         "join subscription sub\n" +
                         "on item.feed_id = sub.feed_id\n" +
                         "where sub.user_id = ?\n" +
-                        "order by item.pub_date desc";
+                        "order by item.pub_date desc;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
         List<FeedItem> feedItems = null;
@@ -49,7 +49,7 @@ public final class FeedDbUtils {
                         "on item.feed_id = sub.feed_id\n" +
                         "where sub.user_id = ?\n" +
                         "order by item.pub_date desc\n" +
-                        "limit ?, ?";
+                        "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
         List<FeedItem> feedItems = null;
@@ -67,7 +67,7 @@ public final class FeedDbUtils {
                         "join feed\n" +
                         "on feed_item.feed_id = feed.id\n" +
                         "where feed.feed_link = ?\n" +
-                        "order by feed_item.pub_date desc";
+                        "order by feed_item.pub_date desc;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
         List<FeedItem> feedItems = null;
@@ -86,7 +86,7 @@ public final class FeedDbUtils {
                         "on feed_item.feed_id = feed.id\n" +
                         "where feed.feed_link = ?\n" +
                         "order by feed_item.pub_date desc\n" +
-                        "limit ?, ?";
+                        "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
         List<FeedItem> feedItems = null;
@@ -104,7 +104,7 @@ public final class FeedDbUtils {
                 "select count(*) as count from feed_item item\n" +
                         "join subscription sub\n" +
                         "on item.feed_id = sub.feed_id\n" +
-                        "where sub.user_id = ?";
+                        "where sub.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
         try {
@@ -122,7 +122,7 @@ public final class FeedDbUtils {
                 "select count(*) as count from feed_item\n" +
                         "join feed\n" +
                         "on feed_item.feed_id = feed.id\n" +
-                        "where feed.feed_link = ?";
+                        "where feed.feed_link = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
         try {
@@ -134,7 +134,7 @@ public final class FeedDbUtils {
     }
 
     public static Feed getFeedByFeedLink(String feedLink) {
-        String query = "select * from feed where feed_link = ?";
+        String query = "select * from feed where feed_link = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
         Feed feed = null;
@@ -147,7 +147,7 @@ public final class FeedDbUtils {
     }
 
     public static Feed getFeedByFeedLink(String feedLink, Connection conn) {
-        String query = "select * from feed where feed_link = ?";
+        String query = "select * from feed where feed_link = ?;";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
         Feed feed = null;
@@ -165,7 +165,7 @@ public final class FeedDbUtils {
                         "from subscription s\n" +
                         "left join feed f\n" +
                         "on s.feed_id = f.id\n" +
-                        "where s.user_id = ?";
+                        "where s.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<SubscriptionWithFeed>> resultHandler = new BeanListHandler<>(SubscriptionWithFeed.class);
         List<SubscriptionWithFeed> subscriptions = null;
@@ -183,7 +183,7 @@ public final class FeedDbUtils {
                         "from subscription s\n" +
                         "left join feed f\n" +
                         "on s.feed_id = f.id\n" +
-                        "where f.feed_link = ?";
+                        "where f.feed_link = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<SubscriptionWithFeed> resultHandler = new BeanHandler<>(SubscriptionWithFeed.class);
         SubscriptionWithFeed subscription = null;
@@ -196,7 +196,7 @@ public final class FeedDbUtils {
     }
 
     public static boolean isValidUser(String userName, String userPassword) {
-        String query = "select * from user where username = ? and password = ?";
+        String query = "select * from user where username = ? and password = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
         User user = null;
@@ -210,7 +210,7 @@ public final class FeedDbUtils {
 
     // @return -1 if user not found
     public static int getUserId(String userName) {
-        String query = "select * from user where username = ?";
+        String query = "select * from user where username = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
         User user = null;
@@ -229,7 +229,7 @@ public final class FeedDbUtils {
 
     // insert new user into user table
     public static int insertIntoUserTable (String username, String password) {
-        String query = "insert into user (username, password) values (?, ?)";
+        String query = "insert into user (username, password) values (?, ?);";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
         try {
@@ -244,7 +244,7 @@ public final class FeedDbUtils {
     // @return feed.id of inserted feed
     public static int insertRssIntoFeedTable(String feedLink, Connection conn) {
         String query = "insert into feed (feed_link) values (?)\n" +
-                "on duplicate key update feed_link = values(feed_link)";
+                "on duplicate key update feed_link = values(feed_link);";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Feed> resultHandler = new  BeanHandler<>(Feed.class);
         try {
@@ -260,7 +260,7 @@ public final class FeedDbUtils {
         String query =
                 "insert into subscription (user_id, feed_id, feed_name) values (?, ?, ?)\n" +
                 "on duplicate key update\n" +
-                "feed_name = values(feed_name)";
+                "feed_name = values(feed_name);";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Subscription> resultHandler = new BeanHandler<>(Subscription.class);
         try {
@@ -276,7 +276,7 @@ public final class FeedDbUtils {
                 "join feed\n" +
                 "on subscription.feed_id = feed.id\n" +
                 "where feed.feed_link = ?\n" +
-                "and subscription.user_id = ?";
+                "and subscription.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         try {
             run.update(query, feedLink, userId);
@@ -290,7 +290,7 @@ public final class FeedDbUtils {
                 "update subscription \n" +
                 "join feed on subscription.feed_id = feed.id\n" +
                 "set feed_name = ?\n" +
-                "where subscription.user_id = ? and feed.feed_link = ?";
+                "where subscription.user_id = ? and feed.feed_link = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         try {
             run.update(query, feedName, userId, feedLink);
@@ -300,7 +300,6 @@ public final class FeedDbUtils {
     }
 
     // insert feed items when a new feed is added
-    // TODO update items each time
     public static void insertIntoFeedItemTable(Object[][] items, Connection conn) throws SQLException {
         String query =
                 "INSERT INTO feed_item (guid, title, description, link, pub_date, feed_id) \n" +
@@ -313,5 +312,14 @@ public final class FeedDbUtils {
                 "feed_id = VALUES(feed_id);";
         QueryRunner run = new QueryRunner();
         run.batch(conn, query, items);
+    }
+
+    public static void insertIntoItemReadStatusTable(Object[][] userItemReadStatuses, Connection conn) throws SQLException {
+        String query =
+                "insert into item_read_status (user_id, item_guid, is_read)\n" +
+                "values (?, ?, ?)\n" +
+                "on duplicate key update item_guid = item_guid;";
+        QueryRunner run = new QueryRunner();
+        run.batch(conn, query, userItemReadStatuses);
     }
 }

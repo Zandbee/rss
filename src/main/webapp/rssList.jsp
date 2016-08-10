@@ -21,6 +21,7 @@ section {
         <form action="updateUserFeedItems" method="post" accept-charset="UTF-8">
             <input type="submit" value="Update all" />
         </form>
+        <br>
 
         <li><a href="latest.jsp">All</a></li>
 
