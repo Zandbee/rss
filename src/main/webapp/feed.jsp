@@ -6,10 +6,10 @@
     div.pagination {
         display: inline;
     }
-    .false{
+    .unread{
         color:green;
     }
-    .true{
+    .read{
         color:red;
     }
 </style>

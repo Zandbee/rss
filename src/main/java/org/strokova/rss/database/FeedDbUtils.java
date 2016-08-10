@@ -19,6 +19,9 @@ import java.util.logging.Logger;
 public final class FeedDbUtils {
     private static final Logger logger = Logger.getLogger(FeedDbUtils.class.getName());
     private static final int NO_RESULT_ID = -1;
+    private static final String ORDER_DESC = "desc";
+    private static final String ORDER_ASC = "asc";
+    private static final String USER_ORDER_ASC = "asc";
 
     // TODO: AsyncQueryRunner?
 
@@ -62,14 +65,21 @@ public final class FeedDbUtils {
     }
 
     // @return a subset of <limit> user's feed items (articles) with a read status ordered by date in descending order with <offset>
-    public static List<FeedItemWithReadStatus> getUserFeedItemsWithReadStatusLatest(int userId, int offset, int limit) throws SQLException {
+    public static List<FeedItemWithReadStatus> getUserFeedItemsWithReadStatusLatest(int userId, int offset, int limit, String userOrder) throws SQLException {
+        String order;
+        if (userOrder.equals(USER_ORDER_ASC)) {
+            order = ORDER_ASC;
+        } else {
+            order = ORDER_DESC;
+        }
+        // TODO change + in strings into append or one line?
         String query =
                 "select i.guid, i.title, i.description, i.link, i.pub_date, i.feed_id, r.is_read\n" +
                 "from feed_item i\n" +
                 "left join item_read_status r\n" +
                 "on i.guid = r.item_guid\n" +
                 "where r.user_id = ?\n" +
-                "order by i.pub_date desc\n" +
+                "order by i.pub_date " + order + "\n" +
                 "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler= new BeanListHandler<>(FeedItemWithReadStatus.class);

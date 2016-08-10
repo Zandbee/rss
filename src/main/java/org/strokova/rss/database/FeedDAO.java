@@ -155,14 +155,14 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset) {
+    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order) {
         if (offset != 0) {
             offset--;
         }
         //return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
         List<FeedItemWithReadStatus> items = null;
         try {
-            items = FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+            items = FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, order);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

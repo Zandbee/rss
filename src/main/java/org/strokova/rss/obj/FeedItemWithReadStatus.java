@@ -10,6 +10,9 @@ import java.util.Locale;
 public class FeedItemWithReadStatus {
     public static final int COL_DESCRIPTION_LENGTH = 3000;
 
+    private static final String STATUS_READ = "read";
+    private static final String STATUS_UNREAD = "unread";
+
     private String guid;
     private String title;
     private String description;
@@ -84,6 +87,10 @@ public class FeedItemWithReadStatus {
     }
 
     public String getReadStatusAsString() {
-        return String.valueOf(is_read);
+        if (is_read) {
+            return STATUS_READ;
+        } else {
+            return STATUS_UNREAD;
+        }
     }
 }
