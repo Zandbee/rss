@@ -24,7 +24,7 @@ public class UpdateUserFeedItemsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            FeedDAO.updateRssItemsForUser((int) req.getAttribute(ATTR_USER_ID));
+            FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(ATTR_USER_ID));
             resp.sendRedirect("latest.jsp");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error processing feed", e);

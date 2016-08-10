@@ -91,6 +91,8 @@ public class FeedDAO {
         Connection conn = FeedDbDataSource.getConnection();
         if (conn != null) {
             try {
+                conn.setAutoCommit(false);
+
                 for (SubscriptionWithFeed subscription : subscriptions) {
                     FeedDbUtils.insertIntoFeedItemTable(
                             getFeedItems(subscription.getFeed_link(), subscription.getFeed_id()), conn);
