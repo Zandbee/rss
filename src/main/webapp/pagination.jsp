@@ -11,33 +11,25 @@
 
 <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 
-<c:set var="uri" value="${pageContext.request.requestURI}"/>
-<c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="pathInfo" value="${pageContext.request.pathInfo}"/>
+<c:set var="servletPath" value="${pageContext.request.servletPath}"/>
 
 <!-- page num -->
-<c:if test="${fn:containsIgnoreCase(uri, 'latest.jsp')}">
+<c:if test="${fn:containsIgnoreCase(servletPath, 'latest.jsp')}">
     <c:set var="pageCount" value="${feedDAO.getPageCountInLatest(sessionScope.userId)}"/>
 </c:if>
-<c:if test="${fn:containsIgnoreCase(uri, 'feed.jsp')}">
+<c:if test="${fn:containsIgnoreCase(servletPath, 'feed.jsp')}">
     <c:set var="pageCount" value="${feedDAO.getPageCountByFeedLink(param.id, sessionScope.userId)}" />
 </c:if>
 
-<!-- url -->
-<c:url var="url" value="${uri}">
-    <c:if test="${!empty param.id}"><c:param name="id" value="${param.id}"/></c:if>
-    <c:if test="${!empty param.order}"><c:param name="order" value="${param.order}"/></c:if>
-</c:url>
-
-
-<p>${url}</p>
-<p>${uri}</p>
-<p>${context}</p>
-<p>${pathInfo}</p>
 <!-- pages -->
 <c:forEach var="i" begin="1" end="${pageCount}">
+    <c:url var="url" value="${servletPath}">
+        <c:if test="${!empty param.id}"><c:param name="id" value="${param.id}"/></c:if>
+        <c:if test="${!empty param.order}"><c:param name="order" value="${param.order}"/></c:if>
+        <c:param name="page" value="${i}"/>
+    </c:url>
     <div class="pagination">
-        <a href="${url.equalsIgnoreCase(uri) ? url.concat('?page=').concat(i) : url.concat('&page=').concat(i)}" style="color: gray;">${i}</a>
+        <a href="${url}" style="color: gray;">${i}</a>
     </div>
 </c:forEach>
 
