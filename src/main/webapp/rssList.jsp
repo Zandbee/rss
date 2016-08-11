@@ -45,10 +45,8 @@ hr {
     <hr>
 
     <c:set var="order" value="${param.order}" />
-    <c:url var="orderUrl" value="${pageContext.request.servletPath}">
-        <c:if test="${!empty param.id}"><c:param name="id" value="${param.id}"/></c:if>
-    </c:url>
-    <form action="${orderUrl}" accept-charset="UTF-8">
+    <form action="${uri}" accept-charset="UTF-8">
+        <c:if test="${!empty param.id}"><input type="text" name="id" value="${param.id}" hidden></c:if>
         <c:choose>
             <c:when test="${!empty order}">
                 <input type="checkbox" name="order" value="asc" checked> Oldest first
