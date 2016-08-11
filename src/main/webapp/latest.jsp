@@ -21,10 +21,7 @@
 <section>
 
     <c:set var="uri" value="${pageContext.request.requestURI}"/>
-
-    <!-- HOW TO GET 'latest.jsp' FROM URL programmatically??? -->
-    <!-- MOVE ORDER TO RSS LIST -->
-
+    <c:set var="servletPath" value="${pageContext.request.servletPath}"/>
     <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatestPage(sessionScope.userId, param.page, param.order)}" />
 
     <c:choose>
@@ -38,8 +35,12 @@
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="${uri}?page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
-                        <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
+                    <c:url var="markReadUrl" value="${servletPath}">
+                        <c:if test="${!empty param.order}"><c:param name="order" value="${param.order}"/></c:if>
+                        <c:if test="${!empty param.page}"><c:param name="page" value="${param.page}"/></c:if>
+                    </c:url>
+                    <form action="${markReadUrl}" method="post" accept-charset="UTF-8" style="display: inline;">
+                        <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>
                     <p>${feedItem.description}</p>

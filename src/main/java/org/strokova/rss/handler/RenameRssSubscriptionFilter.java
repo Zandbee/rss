@@ -40,7 +40,6 @@ public class RenameRssSubscriptionFilter implements Filter {
             String newFeedName = request.getParameter(PARAM_NEW_FEED_NAME);
             int userId = (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID);
             FeedDbUtils.renameSubscriptionInSubscriptionTable(userId, FeedUtils.decodeUrl(feedLink), newFeedName);
-            ((HttpServletResponse) response).sendRedirect("feed.jsp?id=" + request.getParameter("id"));
         }
         chain.doFilter(request, response);
     }

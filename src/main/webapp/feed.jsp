@@ -36,11 +36,16 @@ $(document).ready(function(){
         <h2>${feed.feed_name}</h2>
 
         <button id="editBtn" style="display: inline;">Edit</button>
-        <form action="${uri}?remove=${feedLink}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
+        <form action="${uri}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
+            <input type="text" name="remove" value="${feedLink}" hidden>
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <form id="editBlock" action="feed.jsp?id=${param.id}&rename=${feedLink}" style="display: none;" method="POST" >
+        <c:url var="editUrl" value="${servletPath}">
+            <c:param name="id" value="${param.id}"/>
+        </c:url>
+        <form id="editBlock" action="${editUrl}" style="display: none;" method="POST" >
+            <input type="text" name="rename" value="${feedLink}" hidden>
             <input type="text" name="newFeedName" required="required" />
             <input type="submit" value="Update RSS name" />
         </form>
@@ -51,8 +56,15 @@ $(document).ready(function(){
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="${uri}?id=${param.id}&page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
-                        <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
+
+                    <c:url var="markReadUrl" value="${servletPath}">
+                        <c:param name="id" value="${param.id}"/>
+                        <c:if test="${!empty param.order}"><c:param name="order" value="${param.order}"/></c:if>
+                        <c:if test="${!empty param.page}"><c:param name="page" value="${param.page}"/></c:if>
+                    </c:url>
+
+                    <form action="${markReadUrl}" method="post" accept-charset="UTF-8" style="display: inline;">
+                        <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>
                     <p>${feedItem.description}</p>
