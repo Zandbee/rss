@@ -31,27 +31,19 @@ $(document).ready(function(){
     <section>
 
         <c:set var="feedLink" value="${param.id}"/>
-
-        <c:set var="order" value="${param.order}" />
-        <form action="${uri}">
-            <input type="text" name="id" value="${feedLink}" hidden>
-        <c:choose>
-        <c:when test="${!empty order}">
-            <input type="checkbox" name="order" value="asc" checked> Oldest first
-        </c:when>
-        <c:otherwise>
-            <input type="checkbox" name="order" value="asc"> Oldest first
-        </c:otherwise>
-        </c:choose>
-            <input type="submit" value="Apply" />
-        </form>
+        <p>id=${param.id}, feedLink=${feedLink}</p>
 
         <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
         <h2>${feed.feed_name}</h2>
 
         <button id="editBtn" style="display: inline;">Edit</button>
-        <form action="${uri}?remove=${feedLink}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete?');">
+        <form action="${uri}?remove=${feedLink}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
             <input type="submit" value="Remove" />
+        </form>
+        <br><br>
+        <form id="editBlock" action="feed.jsp?id=${param.id}&rename=${feedLink}" style="display: none;" method="POST" >
+            <input type="text" name="newFeedName" required="required" />
+            <input type="submit" value="Update RSS name" />
         </form>
         <br><br>
 

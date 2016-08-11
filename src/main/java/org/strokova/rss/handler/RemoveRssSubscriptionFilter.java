@@ -3,6 +3,7 @@ package org.strokova.rss.handler;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbDataSource;
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -36,7 +37,7 @@ public class RemoveRssSubscriptionFilter implements Filter {
         String feedLink = request.getParameter(PARAM_REMOVE_LINK);
         if (feedLink != null) {
             try {
-                FeedDAO.deleteRssForUser(feedLink, (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID));
+                FeedDAO.deleteRssForUser(FeedUtils.decodeUrl(feedLink), (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID));
                 ((HttpServletResponse) response).sendRedirect("latest.jsp");
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Error processing feed", e);

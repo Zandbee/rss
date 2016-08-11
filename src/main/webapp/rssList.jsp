@@ -10,6 +10,15 @@ section {
     padding: 1em;
     border-left:1px solid gray;
 }
+hr {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    border-style: inset;
+    border-width: 3px;
+}
 </style>
 <body>
     <nav>
@@ -26,12 +35,27 @@ section {
         <li><a href="latest.jsp">All</a></li>
 
         <c:forEach var="subscription" items="${subscriptions}">
-            <li><a href="feed.jsp?id=${subscription.feed_link}">${subscription.feed_name}</a></li>
+            <li><a href="feed.jsp?id=${subscription.encodedFeedLink}">${subscription.feed_name}</a></li>
         </c:forEach>
     </ul>
     </c:if>
+    <hr>
 
-    <br>
+    <c:set var="order" value="${param.order}" />
+    <form action="${uri}" accept-charset="UTF-8">
+        <c:if test="${!empty param.id}"><input type="text" name="id" value="${param.id}" hidden></c:if>
+        <c:choose>
+            <c:when test="${!empty order}">
+                <input type="checkbox" name="order" value="asc" checked> Oldest first
+            </c:when>
+            <c:otherwise>
+                <input type="checkbox" name="order" value="asc"> Oldest first
+            </c:otherwise>
+        </c:choose>
+        <input type="submit" value="Apply" />
+    </form>
+    <hr>
+
     <form action="addRss" method="post" accept-charset="UTF-8">
         <b>Add new RSS</b> <br>
         Link:<br> <input type="text" name="rss_link" required="required" /><br>

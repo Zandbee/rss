@@ -5,6 +5,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.strokova.rss.obj.*;
+import org.strokova.rss.util.FeedUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -144,7 +145,7 @@ public final class FeedDbUtils {
                         "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler = new BeanListHandler<>(FeedItemWithReadStatus.class);
-        return run.query(query, resultHandler, feedLink, userId, offset, limit);
+        return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId, offset, limit);
     }
 
     // Get the number of feed items for a user. Returns 0 if no feed items found
@@ -241,7 +242,7 @@ public final class FeedDbUtils {
         ResultSetHandler<SubscriptionWithFeed> resultHandler = new BeanHandler<>(SubscriptionWithFeed.class);
         SubscriptionWithFeed subscription = null;
         try {
-            subscription = run.query(query, resultHandler, feedLink);
+            subscription = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink));
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

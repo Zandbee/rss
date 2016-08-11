@@ -25,19 +25,6 @@
     <!-- HOW TO GET 'latest.jsp' FROM URL programmatically??? -->
     <!-- MOVE ORDER TO RSS LIST -->
 
-    <c:set var="order" value="${param.order}" />
-    <form action="${uri}">
-    <c:choose>
-    <c:when test="${!empty order}">
-        <input type="checkbox" name="order" value="asc" checked> Oldest first
-    </c:when>
-    <c:otherwise>
-        <input type="checkbox" name="order" value="asc"> Oldest first
-    </c:otherwise>
-    </c:choose>
-        <input type="submit" value="Apply" />
-    </form>
-
     <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatestPage(sessionScope.userId, param.page, param.order)}" />
 
     <c:choose>

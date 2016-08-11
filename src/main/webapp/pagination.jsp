@@ -12,6 +12,8 @@
 <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 
 <c:set var="uri" value="${pageContext.request.requestURI}"/>
+<c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="pathInfo" value="${pageContext.request.pathInfo}"/>
 
 <!-- page num -->
 <c:if test="${fn:containsIgnoreCase(uri, 'latest.jsp')}">
@@ -22,19 +24,16 @@
 </c:if>
 
 <!-- url -->
-<c:set var="url" value="${uri}"/>
-
-<!-- url id -->
-<c:if test="${!empty param.id}">
-    <c:set var="url" value="${url.equalsIgnoreCase(uri) ? url.concat('?id=').concat(param.id) : url.concat('&id=').concat(param.id)}" />
-</c:if>
-
-<!-- url order -->
-<c:if test="${!empty param.order}">
-    <c:set var="url" value="${url.equalsIgnoreCase(uri) ? url.concat('?order=').concat(param.order) : url.concat('&order=').concat(param.order)}" />
-</c:if>
+<c:url var="url" value="${uri}">
+    <c:if test="${!empty param.id}"><c:param name="id" value="${param.id}"/></c:if>
+    <c:if test="${!empty param.order}"><c:param name="order" value="${param.order}"/></c:if>
+</c:url>
 
 
+<p>${url}</p>
+<p>${uri}</p>
+<p>${context}</p>
+<p>${pathInfo}</p>
 <!-- pages -->
 <c:forEach var="i" begin="1" end="${pageCount}">
     <div class="pagination">

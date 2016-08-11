@@ -1,6 +1,7 @@
 package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -38,7 +39,7 @@ public class RenameRssSubscriptionFilter implements Filter {
         if (feedLink != null) {
             String newFeedName = request.getParameter(PARAM_NEW_FEED_NAME);
             int userId = (int) ((HttpServletRequest) request).getSession().getAttribute(SESSION_ATTR_USER_ID);
-            FeedDbUtils.renameSubscriptionInSubscriptionTable(userId, feedLink, newFeedName);
+            FeedDbUtils.renameSubscriptionInSubscriptionTable(userId, FeedUtils.decodeUrl(feedLink), newFeedName);
             ((HttpServletResponse) response).sendRedirect("feed.jsp?id=" + request.getParameter("id"));
         }
         chain.doFilter(request, response);
