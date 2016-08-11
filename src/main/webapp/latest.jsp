@@ -5,9 +5,6 @@
 <head>
     <title>RSS Reader</title>
     <style>
-    div.pagination {
-        display: inline;
-    }
     .unread{
         color:green;
     }
@@ -23,11 +20,13 @@
 <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 <section>
 
+    <c:set var="uri" value="${pageContext.request.requestURI}"/>
+
     <!-- HOW TO GET 'latest.jsp' FROM URL programmatically??? -->
     <!-- MOVE ORDER TO RSS LIST -->
 
     <c:set var="order" value="${param.order}" />
-    <form action="latest.jsp?">
+    <form action="${uri}">
     <c:choose>
     <c:when test="${!empty order}">
         <input type="checkbox" name="order" value="asc" checked> Oldest first
@@ -40,6 +39,7 @@
     </form>
 
     <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatestPage(sessionScope.userId, param.page, param.order)}" />
+
     <c:choose>
     <c:when test="${empty feedItems}">
         <b>Add RSS feeds to see the content here</b>
@@ -51,7 +51,7 @@
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="latest.jsp?page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <form action="${uri}?page=${param.page}" method="post" accept-charset="UTF-8" style="display: inline;">
                         <input type="text" name="markRead" value="${feedItem.guid}" style="display: none;" />
                         <input type="submit" value="Mark as read" />
                     </form>
@@ -62,19 +62,7 @@
     </c:otherwise>
     </c:choose>
 
-    <c:set var="pageCount" value="${feedDAO.getPageCountInLatest(sessionScope.userId)}" />
-    <c:forEach var="i" begin="1" end="${pageCount}">
-        <div class="pagination">
-            <c:choose>
-            <c:when test="${empty order}">
-                <a href="latest.jsp?page=${i}">${i}</a>
-            </c:when>
-            <c:otherwise>
-                <a href="latest.jsp?order=${order}&page=${i}">${i}</a>
-            </c:otherwise>
-            </c:choose>
-        </div>
-    </c:forEach>
+    <jsp:include page="pagination.jsp" />
 
 </section>
 </body>

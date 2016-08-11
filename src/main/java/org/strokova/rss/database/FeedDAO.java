@@ -9,6 +9,8 @@ import org.strokova.rss.obj.FeedItem;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 import org.strokova.rss.obj.SubscriptionWithFeed;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,7 +56,30 @@ public class FeedDAO {
                 conn.rollback();
                 logger.log(Level.SEVERE, "Error executing SQL", e);
             } finally {
-                conn.close();
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
+            }
+        }
+    }
+
+    public static void deleteRssForUser(String feedLink, int userId) throws SQLException {
+        Connection conn = FeedDbDataSource.getConnection();
+        if (conn != null) {
+            try {
+                conn.setAutoCommit(false);
+
+                FeedDbUtils.deleteFromSubscriptionTable(userId, feedLink, conn);
+                FeedDbUtils.deleteFromItemReadStatusTable(userId, feedLink, conn);
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                logger.log(Level.SEVERE, "Error executing SQL", e);
+            } finally {
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
             }
         }
     }
@@ -132,7 +157,9 @@ public class FeedDAO {
                 conn.rollback();
                 logger.log(Level.SEVERE, "Error executing SQL", e);
             } finally {
-                conn.close();
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
             }
         }
     }
@@ -146,8 +173,8 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static int getPageCountByFeedLink(String feedLink) {
-        int feedItemsCount = FeedDbUtils.getFeedItemsCountByFeedLink(feedLink);
+    public static int getPageCountByFeedLink(String feedLink, int userId) {
+        int feedItemsCount = FeedDbUtils.getFeedItemsCountByFeedLink(feedLink, userId);
         int pageCount = feedItemsCount / ITEMS_PER_PAGE;
         if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
             pageCount++;
