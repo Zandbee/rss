@@ -180,7 +180,7 @@ public final class FeedDbUtils {
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
         try {
-            return run.query(query, resultHandler, feedLink, userId).getCount();
+            return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId).getCount();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

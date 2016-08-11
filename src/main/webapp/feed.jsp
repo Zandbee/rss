@@ -31,9 +31,8 @@ $(document).ready(function(){
     <section>
 
         <c:set var="feedLink" value="${param.id}"/>
-        <p>id=${param.id}, feedLink=${feedLink}</p>
-
         <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
+
         <h2>${feed.feed_name}</h2>
 
         <button id="editBtn" style="display: inline;">Edit</button>

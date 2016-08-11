@@ -12,12 +12,12 @@ section {
 }
 hr {
     display: block;
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin-top: 2em;
+    margin-bottom: 2em;
     margin-left: 0.5em;
     margin-right: 0.5em;
     border-style: inset;
-    border-width: 3px;
+    border-width: 1px;
 }
 </style>
 <body>
@@ -35,15 +35,20 @@ hr {
         <li><a href="latest.jsp">All</a></li>
 
         <c:forEach var="subscription" items="${subscriptions}">
-            <li><a href="feed.jsp?id=${subscription.encodedFeedLink}">${subscription.feed_name}</a></li>
+            <c:url var="feedEncodedUrl" value="/feed.jsp">
+                 <c:param name="id" value="${subscription.encodedFeedLink}"/>
+            </c:url>
+            <li><a href="${feedEncodedUrl}">${subscription.feed_name}</a></li>
         </c:forEach>
     </ul>
     </c:if>
     <hr>
 
     <c:set var="order" value="${param.order}" />
-    <form action="${uri}" accept-charset="UTF-8">
-        <c:if test="${!empty param.id}"><input type="text" name="id" value="${param.id}" hidden></c:if>
+    <c:url var="orderUrl" value="${pageContext.request.servletPath}">
+        <c:if test="${!empty param.id}"><c:param name="id" value="${param.id}"/></c:if>
+    </c:url>
+    <form action="${orderUrl}" accept-charset="UTF-8">
         <c:choose>
             <c:when test="${!empty order}">
                 <input type="checkbox" name="order" value="asc" checked> Oldest first
