@@ -5,6 +5,7 @@ import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 /**
  * @author vstrokova, 04.08.2016.
  */
+@WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
     private static final String PARAM_USERNAME = "username";
     private static final String PARAM_USER_PASSWORD = "userpass";
