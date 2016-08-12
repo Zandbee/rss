@@ -1,6 +1,7 @@
 package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ public class RegistrationServlet extends HttpServlet {
         String username = request.getParameter(PARAM_USERNAME);
         String password = request.getParameter(PARAM_USER_PASSWORD);
 
-        if (FeedDbUtils.getUserId(username) > -1) { // TODO how check user found?
+        if (FeedDbUtils.getUserId(username) > -1) { // TODO how check user found? (boolean isUser()??)
             PrintWriter out = response.getWriter();
             out.print("<p style=\"color:red\">Name is already used. Please choose another name</p>");
             RequestDispatcher rd = request.getRequestDispatcher("registration.jsp");
@@ -32,7 +33,7 @@ public class RegistrationServlet extends HttpServlet {
             out.close();
         } else {
             HttpSession session = request.getSession(true);
-            int userId = FeedDbUtils.insertIntoUserTable(username, password);
+            int userId = FeedDbUtils.insertIntoUserTable(username, FeedUtils.hashPassword(password));
             session.setAttribute(SESSION_ATTRIBUTE_USER_ID, userId);
             response.sendRedirect("latest.jsp");
         }

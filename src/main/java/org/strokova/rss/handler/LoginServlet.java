@@ -1,6 +1,7 @@
 package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class LoginServlet extends HttpServlet {
         String userName = request.getParameter("username"); //TODO: extract String const
         String userPassword = request.getParameter("userpass");
 
-        if (FeedDbUtils.isValidUser(userName, userPassword)) {
+        if (FeedDbUtils.isValidUser(userName, FeedUtils.hashPassword(userPassword))) {
             HttpSession session = request.getSession(true);
             int userId = FeedDbUtils.getUserId(userName);
             session.setAttribute(SESSION_ATTR_USER_ID, userId);

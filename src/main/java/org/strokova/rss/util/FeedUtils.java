@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +14,8 @@ import java.util.logging.Logger;
  */
 public final class FeedUtils {
     private static final Logger logger = Logger.getLogger(FeedUtils.class.getName());
+
+    private static final String HASH_ALGORITHM = "MD5";
 
     public static String encodeUrl(String url) {
         String encodedUrl = null;
@@ -31,5 +35,24 @@ public final class FeedUtils {
             logger.log(Level.SEVERE, "Error encoding URL", e);
         }
         return decodedUrl;
+    }
+
+    public static String hashPassword(String password) {
+        String hashedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
+            md.update(password.getBytes());
+            byte[] bytes = md.digest();
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for (byte aByte : bytes) {
+                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            hashedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            logger.log(Level.SEVERE, "Cannot hash password", e);
+        }
+        return hashedPassword;
     }
 }
