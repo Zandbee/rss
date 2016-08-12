@@ -151,12 +151,8 @@ public final class FeedDbUtils {
     // Get the number of feed items for a user. Returns 0 if no feed items found
     public static int getUserFeedItemsCount(int userId) {
         String query =
-                "select count(*) as count from feed_item item\n" +
-                        "join subscription sub\n" +
-                        "on item.feed_id = sub.feed_id\n" +
-                        "join item_read_status r\n" +
-                        "on item.guid = r.item_guid\n" +
-                        "where sub.user_id = ?;";
+                "select count(*) as count from item_read_status\n" +
+                        "where user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
         try {
