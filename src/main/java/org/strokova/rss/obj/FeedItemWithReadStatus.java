@@ -87,10 +87,6 @@ public class FeedItemWithReadStatus {
     }
 
     public String getReadStatusAsString() {
-        if (is_read) {
-            return STATUS_READ;
-        } else {
-            return STATUS_UNREAD;
-        }
+        return is_read ? STATUS_READ : STATUS_UNREAD;
     }
 }

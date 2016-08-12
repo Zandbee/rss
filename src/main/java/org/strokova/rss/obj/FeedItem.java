@@ -17,9 +17,6 @@ public class FeedItem {
     private Date pub_date;
     private String feed_id;
 
-    public FeedItem() {
-    }
-
     public String getGuid() {
         return guid;
     }

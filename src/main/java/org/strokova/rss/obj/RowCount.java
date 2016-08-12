@@ -6,8 +6,6 @@ package org.strokova.rss.obj;
 public class RowCount {
     private int count;
 
-    public RowCount() {}
-
     public int getCount() {
         return count;
     }
