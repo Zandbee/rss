@@ -36,15 +36,13 @@ $(document).ready(function(){
         <h2>${feed.feed_name}</h2>
 
         <button id="editBtn" style="display: inline;">Edit</button>
-        <form action="${uri}" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
+        <form action="feed" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
             <input type="text" name="remove" value="${feedLink}" hidden>
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <c:url var="editUrl" value="${servletPath}">
-            <c:param name="id" value="${param.id}"/>
-        </c:url>
-        <form id="editBlock" action="${editUrl}" style="display: none;" method="POST" >
+        <form id="editBlock" action="feed" style="display: none;" method="POST" >
+            <input type="text" name="id" value="${param.id}" hidden>
             <input type="text" name="rename" value="${feedLink}" hidden>
             <input type="text" name="newFeedName" required="required" />
             <input type="submit" value="Update RSS name" />

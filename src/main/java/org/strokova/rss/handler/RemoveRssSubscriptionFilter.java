@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * author: Veronika, 8/8/2016.
  */
 // TODO: use annotations instead of web.xml
-@WebFilter("/feed.jsp")
+//@WebFilter("/feed.jsp")
 public class RemoveRssSubscriptionFilter implements Filter {
     private static final Logger logger = Logger.getLogger(RemoveRssSubscriptionFilter.class.getName());
 

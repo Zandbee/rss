@@ -2,7 +2,6 @@ package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDbUtils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,8 +29,8 @@ public class MarkReadServlet extends HttpServlet {
         if (guid != null) {
             try {
                 FeedDbUtils.updateItemReadStatus((int) req.getSession().getAttribute(ATTR_USER_ID), guid);
-                String path = req.getHeader(HEADER_REFERRER);
-                resp.sendRedirect(path);
+                // redirect back
+                resp.sendRedirect(req.getHeader(HEADER_REFERRER));
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Error processing SQL", e);
             }

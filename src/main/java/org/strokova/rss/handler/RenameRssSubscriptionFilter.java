@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author vstrokova, 09.08.2016.
  */
-@WebFilter("/feed.jsp")
+//@WebFilter("/feed.jsp")
 public class RenameRssSubscriptionFilter implements Filter {
 
     private static final String PARAM_RENAME_LINK = "rename";
