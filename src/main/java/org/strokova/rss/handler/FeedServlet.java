@@ -2,6 +2,8 @@ package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.obj.FeedItemWithReadStatus;
+import org.strokova.rss.obj.SubscriptionWithFeed;
 import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +29,27 @@ public class FeedServlet extends HttpServlet {
     private static final String PARAM_NEW_FEED_NAME = "newFeedName";
     private static final String PARAM_REMOVE_LINK = "remove";
     private static final String PARAM_RSS_ID = "id";
+    private static final String PARAM_PAGE = "page";
+    private static final String PARAM_ORDER = "order";
     private static final String SESSION_ATTR_USER_ID = "userId";
+    private static final String REQ_ATTR_FEED = "feed";
+    private static final String REQ_ATTR_FEED_ITEMS = "feedItems";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String feedLink = req.getParameter(PARAM_RSS_ID);
+        SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink);
+        req.setAttribute(REQ_ATTR_FEED, feed);
+
+        String page = req.getParameter(PARAM_PAGE);
+        int pageNum = page == null ? 0 : Integer.parseInt(page);
+        List<FeedItemWithReadStatus> feedItems = FeedDAO.getFeedItemsByFeedLinkPage(
+                (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
+                feedLink,
+                pageNum,
+                req.getParameter(PARAM_ORDER));
+        req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
+
         req.getRequestDispatcher("/feed.jsp").forward(req, resp);
     }
 
@@ -53,7 +73,7 @@ public class FeedServlet extends HttpServlet {
                     (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
                     FeedUtils.decodeUrl(feedLink), newFeedName);
             //req.getRequestDispatcher(req.getServletPath()).forward(req, resp);
-            resp.sendRedirect("feed.jsp?id=" + req.getParameter(PARAM_RSS_ID)); // TODO: fix
+            resp.sendRedirect("feed?id=" + feedLink); // TODO: fix
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error removing RSS", e);
         }

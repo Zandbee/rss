@@ -128,7 +128,7 @@ public final class FeedDbUtils {
 
     public static List<FeedItemWithReadStatus> getFeedItemsWithReadStatusByFeedLink(String feedLink, int offset, int limit, int userId, String userOrder) throws SQLException {
         String order;
-        if (userOrder.equals(USER_ORDER_ASC)) {
+        if (userOrder != null && userOrder.equals(USER_ORDER_ASC)) {
             order = ORDER_ASC;
         } else {
             order = ORDER_DESC;

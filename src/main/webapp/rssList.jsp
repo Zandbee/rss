@@ -35,7 +35,7 @@ hr {
         <li><a href="latest.jsp">All</a></li>
 
         <c:forEach var="subscription" items="${subscriptions}">
-            <c:url var="feedEncodedUrl" value="/feed.jsp">
+            <c:url var="feedEncodedUrl" value="/feed">
                  <c:param name="id" value="${subscription.encodedFeedLink}"/>
             </c:url>
             <li><a href="${feedEncodedUrl}">${subscription.feed_name}</a></li>

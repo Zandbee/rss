@@ -23,15 +23,9 @@ $(document).ready(function(){
 </script>
 <body>
     <jsp:include page="rssList.jsp" />
-    <jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
-    <jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
-
-    <c:set var="uri" value="${pageContext.request.requestURI}"/>
 
     <section>
-
         <c:set var="feedLink" value="${param.id}"/>
-        <c:set var="feed" value="${feedDB.getSubscriptionWithFeedByFeedLink(feedLink)}"/>
 
         <h2>${feed.feed_name}</h2>
 
@@ -50,7 +44,7 @@ $(document).ready(function(){
         <br><br>
 
         <table>
-            <c:forEach var="feedItem" items="${feedDAO.getFeedItemsByFeedLinkPage(sessionScope.userId, feedLink, param.page, param.order)}">
+            <c:forEach var="feedItem" items="${feedItems}">
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
