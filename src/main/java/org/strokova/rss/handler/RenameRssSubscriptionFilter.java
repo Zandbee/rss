@@ -6,12 +6,7 @@ import org.strokova.rss.util.FeedUtils;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author vstrokova, 09.08.2016.
