@@ -8,9 +8,6 @@ public class Subscription {
     private int feed_id;
     private String feed_name;
 
-    public Subscription() {
-    }
-
     public int getUser_id() {
         return user_id;
     }

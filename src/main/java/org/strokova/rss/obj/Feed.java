@@ -7,8 +7,6 @@ public class Feed {
     private int id;
     private String feed_link;
 
-    public Feed() {}
-
     public int getId() {
         return id;
     }

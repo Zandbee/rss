@@ -2,25 +2,15 @@ package org.strokova.rss.obj;
 
 import org.strokova.rss.util.FeedUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author vstrokova, 04.08.2016.
  */
 public class SubscriptionWithFeed {
-    private static final Logger logger = Logger.getLogger(SubscriptionWithFeed.class.getName());
 
     private int user_id;
     private int feed_id;
     private String feed_link;
     private String feed_name;
-
-    public SubscriptionWithFeed() {
-    }
 
     public int getUser_id() {
         return user_id;

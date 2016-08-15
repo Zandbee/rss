@@ -21,9 +21,6 @@ public class FeedItemWithReadStatus {
     private String feed_id;
     private boolean is_read;
 
-    public FeedItemWithReadStatus() {
-    }
-
     public String getGuid() {
         return guid;
     }
