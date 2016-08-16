@@ -28,7 +28,7 @@ public class RegistrationServlet extends HttpServlet {
         String username = request.getParameter(PARAM_USERNAME);
         String password = request.getParameter(PARAM_USER_PASSWORD);
 
-        if (FeedDbUtils.getUserId(username) > -1) { // TODO how check user found? (boolean isUser()??)
+        if (FeedDbUtils.getUserId(username) != null) {
             request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_NAME_EXISTS);
             RequestDispatcher rd = request.getRequestDispatcher("registration.jsp");
             rd.include(request, response);

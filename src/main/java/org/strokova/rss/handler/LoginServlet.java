@@ -20,20 +20,25 @@ import java.io.PrintWriter;
 public class LoginServlet extends HttpServlet {
     public static final String SESSION_ATTR_USER_ID = "userId";
 
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_USER_PASSWORD = "userpass";
     private static final String REQ_ATTR_ERROR = "error";
     private static final String REQ_ATTR_ERROR_INCORRECT_CREDENTIALS = "Username or password is not correct";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String userName = request.getParameter("username"); //TODO: extract String const
-        String userPassword = request.getParameter("userpass");
+        String userName = request.getParameter(PARAM_USERNAME);
+        String userPassword = request.getParameter(PARAM_USER_PASSWORD);
 
         if (FeedDbUtils.isValidUser(userName, FeedUtils.hashPassword(userPassword))) {
             HttpSession session = request.getSession(true);
-            int userId = FeedDbUtils.getUserId(userName);
-            session.setAttribute(SESSION_ATTR_USER_ID, userId);
-            response.sendRedirect("latest");
+            Integer id = FeedDbUtils.getUserId(userName);
+            if (id != null){
+                int userId = id;
+                session.setAttribute(SESSION_ATTR_USER_ID, userId);
+                response.sendRedirect("latest");
+            }
         } else {
             request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_INCORRECT_CREDENTIALS);
             RequestDispatcher rd = request.getRequestDispatcher("login.jsp");

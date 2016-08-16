@@ -258,8 +258,8 @@ public final class FeedDbUtils {
         return (user != null);
     }
 
-    // @return -1 if user not found
-    public static int getUserId(String userName) {
+    // @return null if user not found
+    public static Integer getUserId(String userName) {
         String query = "select * from user where username = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
@@ -269,12 +269,7 @@ public final class FeedDbUtils {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }
-
-        if (user != null) {
-            return user.getId();
-        } else {
-            return NO_RESULT_ID; // TODO: handle 'nothing found' cases
-        }
+        return user != null ? user.getId() : null;
     }
 
     // insert new user into user table
