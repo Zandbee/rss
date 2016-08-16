@@ -22,9 +22,6 @@ hr {
 </style>
 <body>
     <nav>
-    <jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
-    <c:set var="subscriptions" value="${feedDB.getUserSubscriptionsWithFeeds(sessionScope.userId)}" scope="page" />
-
     <c:if test="${!empty subscriptions}">
     <ul>
         <form action="updateUserFeedItems" method="post" accept-charset="UTF-8">

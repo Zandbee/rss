@@ -36,6 +36,7 @@ public class FeedServlet extends HttpServlet {
     private static final String REQ_ATTR_PAGINATION_PAGE_COUNT = "pageCount";
     private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
     private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "feed";
+    private static final String REQ_ATTR_RSSLIST_SUBSCRIPTIONS = "subscriptions";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,6 +44,7 @@ public class FeedServlet extends HttpServlet {
         int userId = (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID);
 
         setupItemsList(req, userId, feedLink);
+        setupRssList(req, userId);
         setupPagination(req, userId, feedLink);
 
         req.getRequestDispatcher("/feed.jsp").forward(req, resp);
@@ -78,6 +80,10 @@ public class FeedServlet extends HttpServlet {
     private static void setupPagination(HttpServletRequest req, int userId, String feedLink) {
         req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountByFeedLink(feedLink, userId));
         req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
+    }
+
+    private static void setupRssList(HttpServletRequest req, int userId) {
+        req.setAttribute(REQ_ATTR_RSSLIST_SUBSCRIPTIONS, FeedDbUtils.getUserSubscriptionsWithFeeds(userId));
     }
 
     private static void renameRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
