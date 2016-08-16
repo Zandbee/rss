@@ -16,12 +16,7 @@
 </head>
 <body>
 <jsp:include page="rssList.jsp" />
-<jsp:useBean id="feedDB" class="org.strokova.rss.database.FeedDbUtils" scope="page" />
-<jsp:useBean id="feedDAO" class="org.strokova.rss.database.FeedDAO" scope="page" />
 <section>
-
-    <c:set var="uri" value="${pageContext.request.requestURI}"/>
-    <c:set var="servletPath" value="${pageContext.request.servletPath}"/>
 
     <c:choose>
     <c:when test="${empty feedItems}">
