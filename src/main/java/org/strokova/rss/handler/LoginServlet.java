@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession(true);
             int userId = FeedDbUtils.getUserId(userName);
             session.setAttribute(SESSION_ATTR_USER_ID, userId);
-            response.sendRedirect("latest.jsp");
+            response.sendRedirect("latest");
         } else {
             PrintWriter out = response.getWriter();
             out.print("<p style=\"color:red\">Username or password is not correct</p>");

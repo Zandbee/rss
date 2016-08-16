@@ -22,7 +22,6 @@
 
     <c:set var="uri" value="${pageContext.request.requestURI}"/>
     <c:set var="servletPath" value="${pageContext.request.servletPath}"/>
-    <c:set var="feedItems" value="${feedDAO.getUserFeedItemsLatestPage(sessionScope.userId, param.page, param.order)}" />
 
     <c:choose>
     <c:when test="${empty feedItems}">

@@ -37,7 +37,7 @@ public class RegistrationServlet extends HttpServlet {
             HttpSession session = request.getSession(true);
             int userId = FeedDbUtils.insertIntoUserTable(username, FeedUtils.hashPassword(password));
             session.setAttribute(SESSION_ATTRIBUTE_USER_ID, userId);
-            response.sendRedirect("latest.jsp");
+            response.sendRedirect("latest");
         }
     }
 }
