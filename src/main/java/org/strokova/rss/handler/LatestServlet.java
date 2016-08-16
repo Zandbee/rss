@@ -21,16 +21,26 @@ public class LatestServlet extends HttpServlet {
     private static final String PARAM_ORDER = "order";
     private static final String SESSION_ATTR_USER_ID = "userId";
     private static final String REQ_ATTR_FEED_ITEMS = "feedItems";
+    private static final String REQ_ATTR_PAGINATION_PAGE_COUNT = "pageCount";
+    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
+    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "latest";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int userId = (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID);
+
         String page = req.getParameter(PARAM_PAGE);
         int pageNum = page == null ? 0 : Integer.parseInt(page);
         List<FeedItemWithReadStatus> feedItems = FeedDAO.getUserFeedItemsLatestPage(
-                (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID),
+                userId,
                 pageNum,
                 req.getParameter(PARAM_ORDER));
         req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
+
+        int paginationPageCount = FeedDAO.getPageCountInLatest(userId);
+        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, paginationPageCount);
+
+        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
 
         req.getRequestDispatcher("latest.jsp").forward(req, resp);
     }

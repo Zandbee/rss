@@ -34,6 +34,9 @@ public class FeedServlet extends HttpServlet {
     private static final String SESSION_ATTR_USER_ID = "userId";
     private static final String REQ_ATTR_FEED = "feed";
     private static final String REQ_ATTR_FEED_ITEMS = "feedItems";
+    private static final String REQ_ATTR_PAGINATION_PAGE_COUNT = "pageCount";
+    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
+    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "feed";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,14 +44,21 @@ public class FeedServlet extends HttpServlet {
         SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink);
         req.setAttribute(REQ_ATTR_FEED, feed);
 
+        int userId = (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID);
+
         String page = req.getParameter(PARAM_PAGE);
         int pageNum = page == null ? 0 : Integer.parseInt(page);
         List<FeedItemWithReadStatus> feedItems = FeedDAO.getFeedItemsByFeedLinkPage(
-                (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
+                userId,
                 feedLink,
                 pageNum,
                 req.getParameter(PARAM_ORDER));
         req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
+
+        int paginationPageCount = FeedDAO.getPageCountByFeedLink(feedLink, userId);
+        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, paginationPageCount);
+
+        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
 
         req.getRequestDispatcher("/feed.jsp").forward(req, resp);
     }
