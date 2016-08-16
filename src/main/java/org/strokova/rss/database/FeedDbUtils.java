@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public final class FeedDbUtils {
     private static final Logger logger = Logger.getLogger(FeedDbUtils.class.getName());
-    private static final int NO_RESULT_ID = -1;
+
     private static final String ORDER_DESC = "desc";
     private static final String ORDER_ASC = "asc";
     private static final String USER_ORDER_ASC = "asc";
@@ -273,7 +273,7 @@ public final class FeedDbUtils {
     }
 
     // insert new user into user table
-    public static int insertIntoUserTable(String username, String password) {
+    public static Integer insertIntoUserTable(String username, String password) {
         String query = "insert into user (username, password) values (?, ?);";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
