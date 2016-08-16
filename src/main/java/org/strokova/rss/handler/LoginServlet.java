@@ -20,6 +20,9 @@ import java.io.PrintWriter;
 public class LoginServlet extends HttpServlet {
     public static final String SESSION_ATTR_USER_ID = "userId";
 
+    private static final String REQ_ATTR_ERROR = "error";
+    private static final String REQ_ATTR_ERROR_INCORRECT_CREDENTIALS = "Username or password is not correct";
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -32,11 +35,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute(SESSION_ATTR_USER_ID, userId);
             response.sendRedirect("latest");
         } else {
-            PrintWriter out = response.getWriter();
-            out.print("<p style=\"color:red\">Username or password is not correct</p>");
+            request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_INCORRECT_CREDENTIALS);
             RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
-            rd.include(request, response);
-            out.close();
+            rd.include(request, response); //TODO forward?
         }
     }
 }
