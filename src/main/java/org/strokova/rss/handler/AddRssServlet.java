@@ -31,7 +31,7 @@ public class AddRssServlet extends HttpServlet {
 
         try {
             FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(ATTR_USER_ID));
-            response.sendRedirect("latest.jsp");
+            response.sendRedirect("latest");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error processing feed", e);
         }

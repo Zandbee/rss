@@ -84,7 +84,7 @@ public class FeedServlet extends HttpServlet {
             FeedDAO.deleteRssForUser(
                     FeedUtils.decodeUrl(feedLink),
                     (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID));
-            resp.sendRedirect("latest.jsp");
+            resp.sendRedirect("latest");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         } catch (IOException e) {

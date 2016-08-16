@@ -32,7 +32,7 @@ hr {
         </form>
         <br>
 
-        <li><a href="latest.jsp">All</a></li>
+        <li><a href="latest">All</a></li>
 
         <c:forEach var="subscription" items="${subscriptions}">
             <c:url var="feedEncodedUrl" value="/feed">

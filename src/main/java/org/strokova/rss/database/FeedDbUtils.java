@@ -68,7 +68,7 @@ public final class FeedDbUtils {
     // @return a subset of <limit> user's feed items (articles) with a read status ordered by date in descending order with <offset>
     public static List<FeedItemWithReadStatus> getUserFeedItemsWithReadStatusLatest(int userId, int offset, int limit, String userOrder) throws SQLException {
         String order;
-        if (userOrder.equals(USER_ORDER_ASC)) {
+        if (userOrder != null && userOrder.equals(USER_ORDER_ASC)) {
             order = ORDER_ASC;
         } else {
             order = ORDER_DESC;
