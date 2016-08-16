@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 public class FeedServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FeedServlet.class.getName());
 
-
     private static final String PARAM_RENAME_LINK = "rename";
     private static final String PARAM_NEW_FEED_NAME = "newFeedName";
     private static final String PARAM_REMOVE_LINK = "remove";
@@ -41,24 +40,10 @@ public class FeedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String feedLink = req.getParameter(PARAM_RSS_ID);
-        SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink);
-        req.setAttribute(REQ_ATTR_FEED, feed);
-
         int userId = (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID);
 
-        String page = req.getParameter(PARAM_PAGE);
-        int pageNum = page == null ? 0 : Integer.parseInt(page);
-        List<FeedItemWithReadStatus> feedItems = FeedDAO.getFeedItemsByFeedLinkPage(
-                userId,
-                feedLink,
-                pageNum,
-                req.getParameter(PARAM_ORDER));
-        req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
-
-        int paginationPageCount = FeedDAO.getPageCountByFeedLink(feedLink, userId);
-        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, paginationPageCount);
-
-        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
+        setupItemsList(req, userId, feedLink);
+        setupPagination(req, userId, feedLink);
 
         req.getRequestDispatcher("/feed.jsp").forward(req, resp);
     }
@@ -74,6 +59,25 @@ public class FeedServlet extends HttpServlet {
         if (removeFeedLink != null) {
             removeRss(removeFeedLink, req, resp);
         }
+    }
+
+    private static void setupItemsList(HttpServletRequest req, int userId, String feedLink) {
+        SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink);
+        req.setAttribute(REQ_ATTR_FEED, feed);
+
+        String page = req.getParameter(PARAM_PAGE);
+        int pageNum = page == null ? 0 : Integer.parseInt(page);
+        List<FeedItemWithReadStatus> feedItems = FeedDAO.getFeedItemsByFeedLinkPage(
+                userId,
+                feedLink,
+                pageNum,
+                req.getParameter(PARAM_ORDER));
+        req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
+    }
+
+    private static void setupPagination(HttpServletRequest req, int userId, String feedLink) {
+        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountByFeedLink(feedLink, userId));
+        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
     }
 
     private static void renameRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ServletException {

@@ -29,6 +29,13 @@ public class LatestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID);
 
+        setupItemsList(req, userId);
+        setupPagination(req, userId);
+
+        req.getRequestDispatcher("latest.jsp").forward(req, resp);
+    }
+
+    private static void setupItemsList(HttpServletRequest req, int userId) {
         String page = req.getParameter(PARAM_PAGE);
         int pageNum = page == null ? 0 : Integer.parseInt(page);
         List<FeedItemWithReadStatus> feedItems = FeedDAO.getUserFeedItemsLatestPage(
@@ -36,12 +43,10 @@ public class LatestServlet extends HttpServlet {
                 pageNum,
                 req.getParameter(PARAM_ORDER));
         req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
+    }
 
-        int paginationPageCount = FeedDAO.getPageCountInLatest(userId);
-        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, paginationPageCount);
-
+    private static void setupPagination(HttpServletRequest req, int userId) {
+        req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountInLatest(userId));
         req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
-
-        req.getRequestDispatcher("latest.jsp").forward(req, resp);
     }
 }
