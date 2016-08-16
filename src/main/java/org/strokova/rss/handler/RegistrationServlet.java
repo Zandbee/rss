@@ -24,13 +24,18 @@ public class RegistrationServlet extends HttpServlet {
     private static final String REQ_ATTR_ERROR_NAME_EXISTS = "Name is already used. Please choose another name";
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/jsp/registration.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter(PARAM_USERNAME);
         String password = request.getParameter(PARAM_USER_PASSWORD);
 
         if (FeedDbUtils.getUserId(username) != null) {
             request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_NAME_EXISTS);
-            RequestDispatcher rd = request.getRequestDispatcher("registration.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp");
             rd.include(request, response);
         } else {
             HttpSession session = request.getSession(true);

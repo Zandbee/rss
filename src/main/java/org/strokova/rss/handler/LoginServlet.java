@@ -26,6 +26,11 @@ public class LoginServlet extends HttpServlet {
     private static final String REQ_ATTR_ERROR_INCORRECT_CREDENTIALS = "Username or password is not correct";
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String userName = request.getParameter(PARAM_USERNAME);
@@ -41,7 +46,7 @@ public class LoginServlet extends HttpServlet {
             }
         } else {
             request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_INCORRECT_CREDENTIALS);
-            RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
             rd.include(request, response); //TODO forward?
         }
     }

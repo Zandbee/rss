@@ -227,18 +227,18 @@ public final class FeedDbUtils {
         return subscriptions;
     }
 
-    public static SubscriptionWithFeed getSubscriptionWithFeedByFeedLink(String feedLink) {
+    public static SubscriptionWithFeed getSubscriptionWithFeedByFeedLink(String feedLink, int userId) {
         String query =
                 "select s.user_id, s.feed_id, f.feed_link, s.feed_name\n" +
                         "from subscription s\n" +
                         "left join feed f\n" +
                         "on s.feed_id = f.id\n" +
-                        "where f.feed_link = ?;";
+                        "where f.feed_link = ? and s.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<SubscriptionWithFeed> resultHandler = new BeanHandler<>(SubscriptionWithFeed.class);
         SubscriptionWithFeed subscription = null;
         try {
-            subscription = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink));
+            subscription = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error executing SQL", e);
         }

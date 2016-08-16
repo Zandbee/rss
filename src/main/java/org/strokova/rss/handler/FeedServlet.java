@@ -47,7 +47,7 @@ public class FeedServlet extends HttpServlet {
         setupRssList(req, userId);
         setupPagination(req, userId, feedLink);
 
-        req.getRequestDispatcher("/feed.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/feed.jsp").forward(req, resp);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FeedServlet extends HttpServlet {
     }
 
     private static void setupItemsList(HttpServletRequest req, int userId, String feedLink) {
-        SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink);
+        SubscriptionWithFeed feed = FeedDbUtils.getSubscriptionWithFeedByFeedLink(feedLink, userId);
         req.setAttribute(REQ_ATTR_FEED, feed);
 
         String page = req.getParameter(PARAM_PAGE);

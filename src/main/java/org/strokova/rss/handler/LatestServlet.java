@@ -35,7 +35,7 @@ public class LatestServlet extends HttpServlet {
         setupRssList(req, userId);
         setupPagination(req, userId);
 
-        req.getRequestDispatcher("latest.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
     }
 
     private static void setupItemsList(HttpServletRequest req, int userId) {

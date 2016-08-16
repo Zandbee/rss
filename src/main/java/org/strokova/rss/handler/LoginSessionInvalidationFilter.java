@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 
 //Invalidate user's session if they explicitly go to login page
-@WebFilter("/login.jsp")
+@WebFilter("/login")
 public class LoginSessionInvalidationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}

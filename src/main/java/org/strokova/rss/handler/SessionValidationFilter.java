@@ -26,7 +26,7 @@ public class SessionValidationFilter implements Filter {
                 && !((HttpServletRequest) request).getRequestURI().startsWith("/rss/registration")) {
             HttpSession session = ((HttpServletRequest) request).getSession(false);
             if (session == null || session.getAttribute(LoginServlet.SESSION_ATTR_USER_ID) == null) {
-                ((HttpServletResponse) response).sendRedirect("login.jsp");
+                ((HttpServletResponse) response).sendRedirect("login");
                 return;
             }
         }
