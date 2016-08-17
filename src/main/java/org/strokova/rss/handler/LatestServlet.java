@@ -2,6 +2,7 @@ package org.strokova.rss.handler;
 
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
+import org.strokova.rss.exception.LatestPageRuntimeException;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 
 import javax.servlet.ServletException;
@@ -10,13 +11,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author vstrokova, 15.08.2016.
  */
 @WebServlet("/latest")
 public class LatestServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(LatestServlet.class.getName());
 
     private static final String PARAM_PAGE = "page";
     private static final String PARAM_ORDER = "order";
@@ -26,19 +31,25 @@ public class LatestServlet extends HttpServlet {
     private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
     private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "latest";
     private static final String REQ_ATTR_RSSLIST_SUBSCRIPTIONS = "subscriptions";
+    private static final String LATEST_EXCEPTION_MSG = "Cannot update the Latest page";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID);
 
-        setupItemsList(req, userId);
-        setupRssList(req, userId);
-        setupPagination(req, userId);
+        try {
+            setupItemsList(req, userId);
+            setupRssList(req, userId);
+            setupPagination(req, userId);
 
-        req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, LATEST_EXCEPTION_MSG, e);
+            throw new LatestPageRuntimeException(LATEST_EXCEPTION_MSG, e);
+        }
     }
 
-    private static void setupItemsList(HttpServletRequest req, int userId) {
+    private static void setupItemsList(HttpServletRequest req, int userId) throws SQLException {
         String page = req.getParameter(PARAM_PAGE);
         int pageNum = page == null ? 0 : Integer.parseInt(page);
         List<FeedItemWithReadStatus> feedItems = FeedDAO.getUserFeedItemsLatestPage(
@@ -48,12 +59,12 @@ public class LatestServlet extends HttpServlet {
         req.setAttribute(REQ_ATTR_FEED_ITEMS, feedItems);
     }
 
-    private static void setupPagination(HttpServletRequest req, int userId) {
+    private static void setupPagination(HttpServletRequest req, int userId) throws SQLException {
         req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountInLatest(userId));
         req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
     }
 
-    private static void setupRssList(HttpServletRequest req, int userId) {
+    private static void setupRssList(HttpServletRequest req, int userId) throws SQLException {
         req.setAttribute(REQ_ATTR_RSSLIST_SUBSCRIPTIONS, FeedDbUtils.getUserSubscriptionsWithFeeds(userId));
     }
 }

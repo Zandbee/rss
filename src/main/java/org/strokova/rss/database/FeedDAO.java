@@ -164,7 +164,7 @@ public class FeedDAO {
         }
     }
 
-    public static int getPageCountInLatest(int userId) {
+    public static int getPageCountInLatest(int userId) throws SQLException {
         int feedItemsCount = FeedDbUtils.getUserFeedItemsCount(userId);
         int pageCount = feedItemsCount / ITEMS_PER_PAGE;
         if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
@@ -173,7 +173,7 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static int getPageCountByFeedLink(String feedLink, int userId) {
+    public static int getPageCountByFeedLink(String feedLink, int userId) throws SQLException {
         int feedItemsCount = FeedDbUtils.getFeedItemsCountByFeedLink(feedLink, userId);
         int pageCount = feedItemsCount / ITEMS_PER_PAGE;
         if ((feedItemsCount % ITEMS_PER_PAGE) > 0) {
@@ -182,31 +182,17 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order) {
+    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order) throws SQLException {
         if (offset != 0) {
             offset--;
         }
-        //return FeedDbUtils.getUserFeedItemsLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-        List<FeedItemWithReadStatus> items = null;
-        try {
-            items = FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, order);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return items;
+        return FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, order);
     }
 
-    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order) {
+    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order) throws SQLException {
         if (offset != 0) {
             offset--;
         }
-        //return FeedDbUtils.getFeedItemsByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-        List<FeedItemWithReadStatus> items = null;
-        try {
-            items = FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, userId, order);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return items;
+        return FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, userId, order);
     }
 }

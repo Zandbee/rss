@@ -24,47 +24,6 @@ public final class FeedDbUtils {
     private static final String ORDER_ASC = "asc";
     private static final String USER_ORDER_ASC = "asc";
 
-    // TODO: AsyncQueryRunner?
-
-    // @return all user's feed items (articles) ordered by date in descending order
-    public static List<FeedItem> getUserFeedItemsLatest(int userId) {
-        String query =
-                "select * from feed_item item\n" +
-                        "join subscription sub\n" +
-                        "on item.feed_id = sub.feed_id\n" +
-                        "where sub.user_id = ?\n" +
-                        "order by item.pub_date desc;";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
-        List<FeedItem> feedItems = null;
-        try {
-            feedItems = run.query(query, resultHandler, userId);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feedItems;
-    }
-
-    // @return a subset of <limit> user's feed items (articles) ordered by date in descending order with <offset>
-    public static List<FeedItem> getUserFeedItemsLatest(int userId, int offset, int limit) {
-        String query =
-                "select * from feed_item item\n" +
-                        "join subscription sub\n" +
-                        "on item.feed_id = sub.feed_id\n" +
-                        "where sub.user_id = ?\n" +
-                        "order by item.pub_date desc\n" +
-                        "limit ?, ?;";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
-        List<FeedItem> feedItems = null;
-        try {
-            feedItems = run.query(query, resultHandler, userId, offset, limit);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feedItems;
-    }
-
     // @return a subset of <limit> user's feed items (articles) with a read status ordered by date in descending order with <offset>
     public static List<FeedItemWithReadStatus> getUserFeedItemsWithReadStatusLatest(int userId, int offset, int limit, String userOrder) throws SQLException {
         String order;
@@ -84,46 +43,7 @@ public final class FeedDbUtils {
                         "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler = new BeanListHandler<>(FeedItemWithReadStatus.class);
-        List<FeedItemWithReadStatus> feedItemsWithReadStatus = null;
-        feedItemsWithReadStatus = run.query(query, resultHandler, userId, offset, limit);
-        return feedItemsWithReadStatus;
-    }
-
-    public static List<FeedItem> getFeedItemsByFeedLink(String feedLink) {
-        String query =
-                "select * from feed_item\n" +
-                        "join feed\n" +
-                        "on feed_item.feed_id = feed.id\n" +
-                        "where feed.feed_link = ?\n" +
-                        "order by feed_item.pub_date desc;";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
-        List<FeedItem> feedItems = null;
-        try {
-            feedItems = run.query(query, resultHandler, feedLink);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feedItems;
-    }
-
-    public static List<FeedItem> getFeedItemsByFeedLink(String feedLink, int offset, int limit) {
-        String query =
-                "select * from feed_item\n" +
-                        "join feed\n" +
-                        "on feed_item.feed_id = feed.id\n" +
-                        "where feed.feed_link = ?\n" +
-                        "order by feed_item.pub_date desc\n" +
-                        "limit ?, ?;";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<List<FeedItem>> resultHandler = new BeanListHandler<>(FeedItem.class);
-        List<FeedItem> feedItems = null;
-        try {
-            feedItems = run.query(query, resultHandler, feedLink, offset, limit);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feedItems;
+        return run.query(query, resultHandler, userId, offset, limit);
     }
 
     public static List<FeedItemWithReadStatus> getFeedItemsWithReadStatusByFeedLink(String feedLink, int offset, int limit, int userId, String userOrder) throws SQLException {
@@ -149,23 +69,18 @@ public final class FeedDbUtils {
     }
 
     // Get the number of feed items for a user. Returns 0 if no feed items found
-    public static int getUserFeedItemsCount(int userId) {
+    public static int getUserFeedItemsCount(int userId) throws SQLException {
         String query =
                 "select count(*) as count from item_read_status\n" +
                         "where user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
-        try {
-            RowCount rows = run.query(query, resultHandler, userId);
-            return rows.getCount();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return 0;
+        RowCount rows = run.query(query, resultHandler, userId);
+        return rows != null ? rows.getCount() : 0;
     }
 
     // Get the number of feed items for a feed. Returns 0 if no feed items found
-    public static int getFeedItemsCountByFeedLink(String feedLink, int userId) {
+    public static int getFeedItemsCountByFeedLink(String feedLink, int userId) throws SQLException {
         String query =
                 "select count(*) as count from feed_item\n" +
                         "join feed\n" +
@@ -175,41 +90,18 @@ public final class FeedDbUtils {
                         "where feed.feed_link = ? and r.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
-        try {
-            return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId).getCount();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return 0;
+        RowCount rows = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
+        return rows != null ? rows.getCount() : 0;
     }
 
-    public static Feed getFeedByFeedLink(String feedLink) {
-        String query = "select * from feed where feed_link = ?;";
-        QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
-        Feed feed = null;
-        try {
-            feed = run.query(query, resultHandler, feedLink);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feed;
-    }
-
-    public static Feed getFeedByFeedLink(String feedLink, Connection conn) {
+    public static Feed getFeedByFeedLink(String feedLink, Connection conn) throws SQLException {
         String query = "select * from feed where feed_link = ?;";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
-        Feed feed = null;
-        try {
-            feed = run.query(conn, query, resultHandler, feedLink);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return feed;
+        return run.query(conn, query, resultHandler, feedLink);
     }
 
-    public static List<SubscriptionWithFeed> getUserSubscriptionsWithFeeds(int userId) {
+    public static List<SubscriptionWithFeed> getUserSubscriptionsWithFeeds(int userId) throws SQLException {
         String query =
                 "select s.user_id, s.feed_id, f.feed_link, s.feed_name\n" +
                         "from subscription s\n" +
@@ -218,16 +110,10 @@ public final class FeedDbUtils {
                         "where s.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<SubscriptionWithFeed>> resultHandler = new BeanListHandler<>(SubscriptionWithFeed.class);
-        List<SubscriptionWithFeed> subscriptions = null;
-        try {
-            subscriptions = run.query(query, resultHandler, userId);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return subscriptions;
+        return run.query(query, resultHandler, userId);
     }
 
-    public static SubscriptionWithFeed getSubscriptionWithFeedByFeedLink(String feedLink, int userId) {
+    public static SubscriptionWithFeed getSubscriptionWithFeedByFeedLink(String feedLink, int userId) throws SQLException {
         String query =
                 "select s.user_id, s.feed_id, f.feed_link, s.feed_name\n" +
                         "from subscription s\n" +
@@ -236,79 +122,55 @@ public final class FeedDbUtils {
                         "where f.feed_link = ? and s.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<SubscriptionWithFeed> resultHandler = new BeanHandler<>(SubscriptionWithFeed.class);
-        SubscriptionWithFeed subscription = null;
-        try {
-            subscription = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
-        return subscription;
+        return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
     }
 
     public static boolean isValidUser(String userName, String userPassword) throws SQLException {
         String query = "select * from user where username = ? and password = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
-        User user = null;
-        user = run.query(query, resultHandler, userName, userPassword);
+        User user = run.query(query, resultHandler, userName, userPassword);
         return (user != null);
     }
 
     // @return null if user not found
-    public static Integer getUserId(String userName) {
+    public static Integer getUserId(String userName) throws SQLException {
         String query = "select * from user where username = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
-        User user = null;
-        try {
-            user = run.query(query, resultHandler, userName);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        User user = run.query(query, resultHandler, userName);
         return user != null ? user.getId() : null;
     }
 
     // insert new user into user table
-    public static Integer insertIntoUserTable(String username, String password) {
+    public static Integer insertIntoUserTable(String username, String password) throws SQLException {
         String query = "insert into user (username, password) values (?, ?);";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
-        try {
-            run.insert(query, resultHandler, username, password);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        run.insert(query, resultHandler, username, password);
         return getUserId(username);
     }
 
     // insert new RSS feed into feed table
     // @return feed.id of inserted feed
-    public static int insertRssIntoFeedTable(String feedLink, Connection conn) {
+    public static int insertRssIntoFeedTable(String feedLink, Connection conn) throws SQLException {
         String query = "insert into feed (feed_link) values (?)\n" +
                 "on duplicate key update feed_link = values(feed_link);";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Feed> resultHandler = new BeanHandler<>(Feed.class);
-        try {
-            run.insert(conn, query, resultHandler, feedLink);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        run.insert(conn, query, resultHandler, feedLink);
         return getFeedByFeedLink(feedLink, conn).getId();
     }
 
     // insert new subscription for a user when they add new rss
-    public static void insertIntoSubscriptionTable(int userId, int feedId, String feedName, Connection conn) {
+    public static void insertIntoSubscriptionTable(int userId, int feedId, String feedName, Connection conn) throws SQLException {
         String query =
                 "insert into subscription (user_id, feed_id, feed_name) values (?, ?, ?)\n" +
                         "on duplicate key update\n" +
                         "feed_name = values(feed_name);";
         QueryRunner run = new QueryRunner();
         ResultSetHandler<Subscription> resultHandler = new BeanHandler<>(Subscription.class);
-        try {
-            run.insert(conn, query, resultHandler, userId, feedId, feedName);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        run.insert(conn, query, resultHandler, userId, feedId, feedName);
     }
 
     public static void deleteFromSubscriptionTable(int userId, String feedLink, Connection conn) throws SQLException {
@@ -335,19 +197,15 @@ public final class FeedDbUtils {
         run.update(conn, query, feedLink, userId);
     }
 
-    // rename into ->update<-SubscriptionInSubscriptionTable
-    public static void renameSubscriptionInSubscriptionTable(int userId, String feedLink, String feedName) {
+    // rename subscription
+    public static void updateSubscriptionInSubscriptionTable(int userId, String feedLink, String feedName) throws SQLException {
         String query =
                 "update subscription \n" +
                         "join feed on subscription.feed_id = feed.id\n" +
                         "set feed_name = ?\n" +
                         "where subscription.user_id = ? and feed.feed_link = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
-        try {
-            run.update(query, feedName, userId, feedLink);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e);
-        }
+        run.update(query, feedName, userId, feedLink);
     }
 
     // insert feed items when a new feed is added

@@ -89,7 +89,7 @@ public class FeedServlet extends HttpServlet {
     private static void renameRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try {
             String newFeedName = req.getParameter(PARAM_NEW_FEED_NAME);
-            FeedDbUtils.renameSubscriptionInSubscriptionTable(
+            FeedDbUtils.updateSubscriptionInSubscriptionTable(
                     (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
                     FeedUtils.decodeUrl(feedLink), newFeedName);
             //req.getRequestDispatcher(req.getServletPath()).forward(req, resp);
