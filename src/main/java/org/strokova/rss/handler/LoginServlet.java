@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class LoginServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 
-    public static final String SESSION_ATTR_USER_ID = "userId";
+    public static final String SESSION_ATTR_USER_ID = "userId"; // TODO
     private static final String PARAM_USERNAME = "username";
     private static final String PARAM_USER_PASSWORD = "userpass";
     private static final String REQ_ATTR_ERROR = "error";
@@ -37,10 +37,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            throw new SQLException("AAAA");
 
-        /*String userName = request.getParameter(PARAM_USERNAME);
+        String userName = request.getParameter(PARAM_USERNAME);
         String userPassword = request.getParameter(PARAM_USER_PASSWORD);
 
         try {
@@ -56,12 +54,9 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_INCORRECT_CREDENTIALS);
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
                 rd.include(request, response); //TODO forward?
-            }*/
-    } catch(SQLException e)
-
-    {
-        request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-        logger.log(Level.SEVERE, "Error executing SQL", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Login failed", e);
+        }
     }
-}
 }

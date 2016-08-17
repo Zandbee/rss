@@ -5,7 +5,7 @@
 <head>
 <title>Error</title>
 </head>
-<h3>ServerError</h3>
-<p>${pageContext.errorData.throwable.cause}</p>
+<h2>Something went wrong :(</h2>
+<p>${pageContext.errorData.throwable.message}</p>
 </body>
 </html>
