@@ -245,16 +245,12 @@ public final class FeedDbUtils {
         return subscription;
     }
 
-    public static boolean isValidUser(String userName, String userPassword) {
+    public static boolean isValidUser(String userName, String userPassword) throws SQLException {
         String query = "select * from user where username = ? and password = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
         User user = null;
-        try {
-            user = run.query(query, resultHandler, userName, userPassword);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error executing SQL", e); // TODO: create custom exceptions
-        }
+        user = run.query(query, resultHandler, userName, userPassword);
         return (user != null);
     }
 

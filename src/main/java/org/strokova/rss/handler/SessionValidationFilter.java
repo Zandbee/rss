@@ -23,7 +23,8 @@ public class SessionValidationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (!((HttpServletRequest) request).getRequestURI().startsWith("/rss/login")
-                && !((HttpServletRequest) request).getRequestURI().startsWith("/rss/registration")) {
+                && !((HttpServletRequest) request).getRequestURI().startsWith("/rss/registration")
+                && !((HttpServletRequest) request).getRequestURI().toLowerCase().contains("error")) {
             HttpSession session = ((HttpServletRequest) request).getSession(false);
             if (session == null || session.getAttribute(LoginServlet.SESSION_ATTR_USER_ID) == null) {
                 ((HttpServletResponse) response).sendRedirect("login");
