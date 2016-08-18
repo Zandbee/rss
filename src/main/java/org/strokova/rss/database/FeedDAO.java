@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -48,6 +49,10 @@ public class FeedDAO {
 
                 // commit transaction
                 conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                logger.log(Level.SEVERE, "Cannot add rss", e);
+                throw e;
             } finally {
                 if (!conn.isClosed()) {
                     conn.close();
@@ -66,7 +71,11 @@ public class FeedDAO {
                 FeedDbUtils.deleteFromItemReadStatusTable(userId, feedLink, conn);
 
                 conn.commit();
-            } finally {
+            } catch (Exception e) {
+                conn.rollback();
+                logger.log(Level.SEVERE, "Cannot delete rss", e);
+                throw e;
+            }finally {
                 if (!conn.isClosed()) {
                     conn.close();
                 }
@@ -130,11 +139,15 @@ public class FeedDAO {
                     Object[][] feedItems = getFeedItems(subscription.getFeed_link(), subscription.getFeed_id());
                     FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
 
-                    FeedDbUtils.insertIntoItemReadStatusTable(getUserItemReadStatuses(
-                            getFeedItemsGuids(feedItems), userId), conn);
+                    FeedDbUtils.insertIntoItemReadStatusTable(
+                            getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
                 }
 
                 conn.commit();
+            } catch (Exception e) {
+                conn.rollback();
+                logger.log(Level.SEVERE, "Cannot update rss", e);
+                throw e;
             } finally {
                 if (!conn.isClosed()) {
                     conn.close();
