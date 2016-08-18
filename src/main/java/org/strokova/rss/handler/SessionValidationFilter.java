@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ public class SessionValidationFilter implements Filter {
                 && !((HttpServletRequest) request).getRequestURI().startsWith("/rss/registration")
                 && !((HttpServletRequest) request).getRequestURI().toLowerCase().contains("error")) {
             HttpSession session = ((HttpServletRequest) request).getSession(false);
-            if (session == null || session.getAttribute(LoginServlet.SESSION_ATTR_USER_ID) == null) {
+            if (session == null || session.getAttribute(SESSION_ATTR_USER_ID) == null) {
                 ((HttpServletResponse) response).sendRedirect("login");
                 return;
             }

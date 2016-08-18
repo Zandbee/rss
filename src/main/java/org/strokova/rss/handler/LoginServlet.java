@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.LoginRuntimeException;
 import org.strokova.rss.util.FeedUtils;
@@ -23,10 +25,6 @@ import java.util.logging.Logger;
 public class LoginServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 
-    public static final String SESSION_ATTR_USER_ID = "userId"; // TODO
-    private static final String PARAM_USERNAME = "username";
-    private static final String PARAM_USER_PASSWORD = "userpass";
-    private static final String REQ_ATTR_ERROR = "error";
     private static final String REQ_ATTR_ERROR_INCORRECT_CREDENTIALS = "Username or password is not correct";
     private static final String LOGIN_EXCEPTION_MSG = "Login failed";
 

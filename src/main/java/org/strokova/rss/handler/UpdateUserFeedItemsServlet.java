@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.exception.UpdateFeedsRuntimeException;
@@ -21,13 +23,12 @@ import java.util.logging.Logger;
 public class UpdateUserFeedItemsServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(UpdateUserFeedItemsServlet.class.getName());
 
-    private static final String ATTR_USER_ID = "userId";
     private static final String UPDATE_FEEDS_EXCEPTION_MSG = "Could not update feeds";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(ATTR_USER_ID));
+            FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             resp.sendRedirect("latest");
         } catch (SQLException | FeedException e) {
             logger.log(Level.SEVERE, UPDATE_FEEDS_EXCEPTION_MSG, e);

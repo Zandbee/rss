@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.exception.NewRssRuntimeException;
@@ -21,9 +23,6 @@ import java.util.logging.Logger;
 public class AddRssServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(AddRssServlet.class.getName());
 
-    private static final String PARAM_RSS_LINK = "rss_link";
-    private static final String PARAM_RSS_NAME = "rss_name";
-    private static final String ATTR_USER_ID = "userId";
     private static final String NEW_RSS_EXCEPTION_MSG = "Could not add a new RSS";
 
     @Override
@@ -33,7 +32,7 @@ public class AddRssServlet extends HttpServlet {
         String rssName = request.getParameter(PARAM_RSS_NAME);
 
         try {
-            FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(ATTR_USER_ID));
+            FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             response.sendRedirect("latest");
         } catch (SQLException | FeedException e) {
             logger.log(Level.SEVERE, NEW_RSS_EXCEPTION_MSG, e);

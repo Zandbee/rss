@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.RegistrationRuntimeException;
 import org.strokova.rss.util.FeedUtils;
@@ -23,10 +25,6 @@ import java.util.logging.Logger;
 public class RegistrationServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RegistrationServlet.class.getName());
 
-    private static final String PARAM_USERNAME = "username";
-    private static final String PARAM_USER_PASSWORD = "userpass";
-    private static final String SESSION_ATTRIBUTE_USER_ID = "userId";
-    private static final String REQ_ATTR_ERROR = "error";
     private static final String REQ_ATTR_ERROR_NAME_EXISTS = "Name is already used. Please choose another name";
     private static final String REGISTRATION_EXCEPTION_MSG = "Registration failed";
 
@@ -48,7 +46,7 @@ public class RegistrationServlet extends HttpServlet {
             } else {
                 HttpSession session = request.getSession(true);
                 int userId = FeedDbUtils.insertIntoUserTable(username, FeedUtils.hashPassword(password));
-                session.setAttribute(SESSION_ATTRIBUTE_USER_ID, userId);
+                session.setAttribute(SESSION_ATTR_USER_ID, userId);
                 response.sendRedirect("latest");
             }
         } catch (SQLException e) {

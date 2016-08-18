@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.LatestPageRuntimeException;
@@ -23,14 +25,6 @@ import java.util.logging.Logger;
 public class LatestServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LatestServlet.class.getName());
 
-    private static final String PARAM_PAGE = "page";
-    private static final String PARAM_ORDER = "order";
-    private static final String SESSION_ATTR_USER_ID = "userId";
-    private static final String REQ_ATTR_FEED_ITEMS = "feedItems";
-    private static final String REQ_ATTR_PAGINATION_PAGE_COUNT = "pageCount";
-    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
-    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "latest";
-    private static final String REQ_ATTR_RSSLIST_SUBSCRIPTIONS = "subscriptions";
     private static final String LATEST_EXCEPTION_MSG = "Cannot update the Latest page";
 
     @Override
@@ -61,7 +55,7 @@ public class LatestServlet extends HttpServlet {
 
     private static void setupPagination(HttpServletRequest req, int userId) throws SQLException {
         req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountInLatest(userId));
-        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
+        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE_LATEST);
     }
 
     private static void setupRssList(HttpServletRequest req, int userId) throws SQLException {

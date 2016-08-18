@@ -1,5 +1,7 @@
 package org.strokova.rss.handler;
 
+import static org.strokova.rss.util.RequestConstants.*;
+
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.FeedPageRuntimeException;
@@ -25,19 +27,6 @@ import java.util.logging.Logger;
 public class FeedServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FeedServlet.class.getName());
 
-    private static final String PARAM_RENAME_LINK = "rename";
-    private static final String PARAM_NEW_FEED_NAME = "newFeedName";
-    private static final String PARAM_REMOVE_LINK = "remove";
-    private static final String PARAM_RSS_ID = "id";
-    private static final String PARAM_PAGE = "page";
-    private static final String PARAM_ORDER = "order";
-    private static final String SESSION_ATTR_USER_ID = "userId";
-    private static final String REQ_ATTR_FEED = "feed";
-    private static final String REQ_ATTR_FEED_ITEMS = "feedItems";
-    private static final String REQ_ATTR_PAGINATION_PAGE_COUNT = "pageCount";
-    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN = "servletPattern";
-    private static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE = "feed";
-    private static final String REQ_ATTR_RSSLIST_SUBSCRIPTIONS = "subscriptions";
     private static final String FEED_PAGE_EXCEPTION_MSG = "Cannot update the Feed page";
 
     @Override
@@ -91,7 +80,7 @@ public class FeedServlet extends HttpServlet {
 
     private static void setupPagination(HttpServletRequest req, int userId, String feedLink) throws SQLException {
         req.setAttribute(REQ_ATTR_PAGINATION_PAGE_COUNT, FeedDAO.getPageCountByFeedLink(feedLink, userId));
-        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE);
+        req.setAttribute(REQ_ATTR_PAGINATION_SERVLET_PATTERN, REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE_FEED);
     }
 
     private static void setupRssList(HttpServletRequest req, int userId) throws SQLException {
