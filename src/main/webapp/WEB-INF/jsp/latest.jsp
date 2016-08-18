@@ -16,7 +16,7 @@
 </head>
 <body>
 <jsp:include page="rssList.jsp" />
-<section>
+<section id="feed_list">
 
     <c:choose>
     <c:when test="${empty feedItems}">

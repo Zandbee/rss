@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
+<head>
 <style>
-nav {
+#menu {
     float:left;
     width:18%;
 }
@@ -20,8 +21,9 @@ hr {
     border-width: 1px;
 }
 </style>
+</head>
 <body>
-    <nav>
+    <nav id="menu">
     <c:if test="${!empty subscriptions}">
     <ul>
         <form action="updateUserFeedItems" method="post" accept-charset="UTF-8">

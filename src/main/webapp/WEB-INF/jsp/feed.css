@@ -1,0 +1,18 @@
+div.pagination {
+    display: inline;
+}
+.unread{
+    color:green;
+}
+.read{
+    color:red;
+}
+#edit_btn, #remove_form, #item_date, #mark_read_form {
+    display: inline;
+}
+#edit_block {
+    display: none;
+}
+#item_date {
+    color:gray;
+}

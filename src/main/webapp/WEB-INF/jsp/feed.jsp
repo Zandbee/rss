@@ -2,25 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-<style>
-    div.pagination {
-        display: inline;
-    }
-    .unread{
-        color:green;
-    }
-    .read{
-        color:red;
-    }
-</style>
+<head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-    $("#editBtn").click(function(){
-        $("#editBlock").toggle();
+    $("#edit_btn").click(function(){
+        $("#edit_block").toggle();
    });
 });
 </script>
+<link rel="stylesheet" type="text/css" href="feed.css">
+</head>
 <body>
     <jsp:include page="rssList.jsp" />
 
@@ -29,14 +21,14 @@ $(document).ready(function(){
 
         <h2>${feed.feed_name}</h2>
 
-        <button id="editBtn" style="display: inline;">Edit</button>
-        <form action="feed" style="display: inline;" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
+        <button id="edit_btn" >Edit</button>
+        <form id="remove_form" action="feed" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');" style="display: inline;" >
             <input type="text" name="remove" value="${feedLink}" hidden>
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <form id="editBlock" action="feed" style="display: none;" method="POST" >
-            <input type="text" name="id" value="${param.id}" hidden>
+        <form id="edit_block" action="feed" method="POST" style="display: none;">
+            <input type="text" name="id" value="${feedLink}" hidden>
             <input type="text" name="rename" value="${feedLink}" hidden>
             <input type="text" name="newFeedName" required="required" />
             <input type="submit" value="Update RSS name" />
@@ -47,8 +39,8 @@ $(document).ready(function(){
             <c:forEach var="feedItem" items="${feedItems}">
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
-                    <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="markRead" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <small id="item_date">${feedItem.formattedDate}</small>
+                    <form id="mark_read_form" action="markRead" method="post" accept-charset="UTF-8" style="display: inline;">
                         <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>
