@@ -29,6 +29,10 @@ public final class RequestConstants {
     public static final String REQ_ATTR_PAGINATION_SERVLET_PATTERN_VALUE_LATEST = "latest";
     public static final String REQ_ATTR_RSSLIST_SUBSCRIPTIONS = "subscriptions";
     public static final String REQ_ATTR_ERROR = "error";
+    public static final String REQ_ATTR_MAX_LENGTH_USERNAME = "usernameMaxLength";
+    public static final String REQ_ATTR_MAX_LENGTH_PASSWORD = "passwordMaxLength";
+    public static final String REQ_ATTR_MAX_LENGTH_FEED_NAME = "feedNameMaxLength";
+    public static final String REQ_ATTR_MAX_LENGTH_FEED_LINK = "feedLinkMaxLength";
 
 
     // session attributes

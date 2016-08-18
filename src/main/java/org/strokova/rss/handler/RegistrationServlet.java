@@ -5,6 +5,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.RegistrationException;
 import org.strokova.rss.exception.ValidationFailedException;
+import org.strokova.rss.obj.User;
 import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -31,6 +32,9 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute(REQ_ATTR_MAX_LENGTH_USERNAME, User.COLUMN_USERNAME_LENGTH);
+        req.setAttribute(REQ_ATTR_MAX_LENGTH_PASSWORD, User.COLUMN_PASSWORD_LENGTH);
+
         req.getRequestDispatcher("/WEB-INF/jsp/registration.jsp").forward(req, resp);
     }
 

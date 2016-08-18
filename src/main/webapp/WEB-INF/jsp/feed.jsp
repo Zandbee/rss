@@ -30,7 +30,7 @@ $(document).ready(function(){
         <form id="edit_block" action="feed" method="POST" style="display: none;">
             <input type="text" name="id" value="${feedLink}" hidden>
             <input type="text" name="rename" value="${feedLink}" hidden>
-            <input type="text" name="newFeedName" required="required" />
+            <input type="text" name="newFeedName" maxlength="${feedNameMaxLength}" required="required" />
             <input type="submit" value="Update RSS name" />
         </form>
         <br><br>

@@ -60,8 +60,8 @@ hr {
 
     <form action="addRss" method="post" accept-charset="UTF-8">
         <b>Add new RSS</b> <br>
-        Link:<br> <input type="text" name="rss_link" required="required" /><br>
-        Name:<br> <input type="text" name="rss_name" required="required" /><br><br>
+        Link:<br> <input type="text" name="rss_link" maxlength="${feedLinkMaxLength}" required="required" /><br>
+        Name:<br> <input type="text" name="rss_name" maxlength="${feedNameMaxLength}" required="required" /><br><br>
         <input type="submit" value="Add" />
     </form>
     </nav>

@@ -5,7 +5,9 @@ import static org.strokova.rss.util.RequestConstants.*;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.LatestPageException;
+import org.strokova.rss.obj.FeedItem;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
+import org.strokova.rss.obj.Subscription;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,5 +62,7 @@ public class LatestServlet extends HttpServlet {
 
     private static void setupRssList(HttpServletRequest req, int userId) throws SQLException {
         req.setAttribute(REQ_ATTR_RSSLIST_SUBSCRIPTIONS, FeedDbUtils.getUserSubscriptionsWithFeeds(userId));
+        req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_LINK, FeedItem.COLUMN_LINK_LENGTH);
+        req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_NAME, Subscription.COLUMN_FEED_NAME_LENGTH);
     }
 }
