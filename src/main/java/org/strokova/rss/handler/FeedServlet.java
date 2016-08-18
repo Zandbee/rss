@@ -4,7 +4,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
-import org.strokova.rss.exception.FeedPageRuntimeException;
+import org.strokova.rss.exception.FeedPageException;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 import org.strokova.rss.obj.SubscriptionWithFeed;
 import org.strokova.rss.util.FeedUtils;
@@ -40,7 +40,7 @@ public class FeedServlet extends HttpServlet {
             setupPagination(req, userId, feedLink);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, FEED_PAGE_EXCEPTION_MSG, e);
-            throw new FeedPageRuntimeException(FEED_PAGE_EXCEPTION_MSG, e);
+            throw new FeedPageException(FEED_PAGE_EXCEPTION_MSG, e);
         }
 
         req.getRequestDispatcher("/WEB-INF/jsp/feed.jsp").forward(req, resp);
@@ -60,7 +60,7 @@ public class FeedServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, FEED_PAGE_EXCEPTION_MSG, e);
-            throw new FeedPageRuntimeException(FEED_PAGE_EXCEPTION_MSG, e);
+            throw new FeedPageException(FEED_PAGE_EXCEPTION_MSG, e);
         }
     }
 

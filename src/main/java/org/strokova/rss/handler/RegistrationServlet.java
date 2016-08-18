@@ -3,7 +3,8 @@ package org.strokova.rss.handler;
 import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDbUtils;
-import org.strokova.rss.exception.RegistrationRuntimeException;
+import org.strokova.rss.exception.RegistrationException;
+import org.strokova.rss.exception.ValidationFailedException;
 import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -49,9 +50,9 @@ public class RegistrationServlet extends HttpServlet {
                 session.setAttribute(SESSION_ATTR_USER_ID, userId);
                 response.sendRedirect("latest");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ValidationFailedException e) {
             logger.log(Level.SEVERE, REGISTRATION_EXCEPTION_MSG, e);
-            throw new RegistrationRuntimeException(REGISTRATION_EXCEPTION_MSG, e);
+            throw new RegistrationException(REGISTRATION_EXCEPTION_MSG, e);
         }
     }
 }

@@ -4,6 +4,8 @@ package org.strokova.rss.obj;
  * @author vstrokova, 03.08.2016.
  */
 public class Subscription {
+    public static final int COLUMN_FEED_NAME_LENGTH = 300;
+
     private int user_id;
     private int feed_id;
     private String feed_name;

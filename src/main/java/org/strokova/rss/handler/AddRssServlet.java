@@ -4,7 +4,8 @@ import static org.strokova.rss.util.RequestConstants.*;
 
 import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
-import org.strokova.rss.exception.NewRssRuntimeException;
+import org.strokova.rss.exception.NewRssException;
+import org.strokova.rss.exception.ValidationFailedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,9 +35,9 @@ public class AddRssServlet extends HttpServlet {
         try {
             FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             response.sendRedirect("latest");
-        } catch (SQLException | FeedException e) {
+        } catch (SQLException | FeedException | ValidationFailedException e) {
             logger.log(Level.SEVERE, NEW_RSS_EXCEPTION_MSG, e);
-            throw new NewRssRuntimeException(NEW_RSS_EXCEPTION_MSG, e);
+            throw new NewRssException(NEW_RSS_EXCEPTION_MSG, e);
         }
     }
 }

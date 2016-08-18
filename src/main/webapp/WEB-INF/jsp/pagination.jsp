@@ -1,7 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<link rel="stylesheet" type="text/css" href="pagination.css">
+<style>
+    div.pagination {
+        display: inline;
+    }
+</style>
 <body>
 
 <c:forEach var="i" begin="1" end="${pageCount}">

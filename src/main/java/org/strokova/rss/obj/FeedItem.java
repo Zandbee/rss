@@ -8,7 +8,10 @@ import java.util.Locale;
  * Created by Veronika on 7/28/2016.
  */
 public class FeedItem {
-    public static final int COL_DESCRIPTION_LENGTH = 3000;
+    public static final int COLUMN_GUID_LENGTH = 3000;
+    public static final int COLUMN_TITLE_LENGTH = 3000;
+    public static final int COLUMN_DESCRIPTION_LENGTH = 3000;
+    public static final int COLUMN_LINK_LENGTH = 3000;
 
     private String guid;
     private String title;

@@ -4,7 +4,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 
 import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
-import org.strokova.rss.exception.UpdateFeedsRuntimeException;
+import org.strokova.rss.exception.UpdateFeedsException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,7 +32,7 @@ public class UpdateUserFeedItemsServlet extends HttpServlet {
             resp.sendRedirect("latest");
         } catch (SQLException | FeedException e) {
             logger.log(Level.SEVERE, UPDATE_FEEDS_EXCEPTION_MSG, e);
-            throw new UpdateFeedsRuntimeException(UPDATE_FEEDS_EXCEPTION_MSG, e);
+            throw new UpdateFeedsException(UPDATE_FEEDS_EXCEPTION_MSG, e);
         }
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.strokova.rss.exception.ValidationFailedException;
 import org.strokova.rss.obj.*;
 import org.strokova.rss.util.FeedUtils;
 
@@ -142,7 +143,10 @@ public final class FeedDbUtils {
     }
 
     // insert new user into user table
-    public static Integer insertIntoUserTable(String username, String password) throws SQLException {
+    public static Integer insertIntoUserTable(String username, String password) throws SQLException, ValidationFailedException {
+        if (username.length() > User.COLUMN_USERNAME_LENGTH || password.length() > User.COLUMN_PASSWORD_LENGTH) {
+            throw new ValidationFailedException("Username or password is too long");
+        }
         String query = "insert into user (username, password) values (?, ?);";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<User> resultHandler = new BeanHandler<>(User.class);
@@ -152,7 +156,11 @@ public final class FeedDbUtils {
 
     // insert new RSS feed into feed table
     // @return feed.id of inserted feed
-    public static int insertRssIntoFeedTable(String feedLink, Connection conn) throws SQLException {
+    public static int insertRssIntoFeedTable(String feedLink, Connection conn) throws SQLException, ValidationFailedException {
+        if (feedLink.length() > Feed.COLUMN_FEED_LINK_LENGTH) {
+            throw new ValidationFailedException("Too long feed link");
+        }
+
         String query = "insert into feed (feed_link) values (?)\n" +
                 "on duplicate key update feed_link = values(feed_link);";
         QueryRunner run = new QueryRunner();
@@ -163,6 +171,10 @@ public final class FeedDbUtils {
 
     // insert new subscription for a user when they add new rss
     public static void insertIntoSubscriptionTable(int userId, int feedId, String feedName, Connection conn) throws SQLException {
+        if (feedName.length() > Subscription.COLUMN_FEED_NAME_LENGTH) {
+            feedName = feedName.substring(0, Subscription.COLUMN_FEED_NAME_LENGTH - 1);
+        }
+
         String query =
                 "insert into subscription (user_id, feed_id, feed_name) values (?, ?, ?)\n" +
                         "on duplicate key update\n" +

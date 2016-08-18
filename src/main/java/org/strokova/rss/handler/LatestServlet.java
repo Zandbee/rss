@@ -4,7 +4,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
-import org.strokova.rss.exception.LatestPageRuntimeException;
+import org.strokova.rss.exception.LatestPageException;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 
 import javax.servlet.ServletException;
@@ -39,7 +39,7 @@ public class LatestServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, LATEST_EXCEPTION_MSG, e);
-            throw new LatestPageRuntimeException(LATEST_EXCEPTION_MSG, e);
+            throw new LatestPageException(LATEST_EXCEPTION_MSG, e);
         }
     }
 

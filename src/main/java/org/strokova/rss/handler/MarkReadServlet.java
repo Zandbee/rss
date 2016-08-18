@@ -3,7 +3,7 @@ package org.strokova.rss.handler;
 import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDbUtils;
-import org.strokova.rss.exception.MarkReadRuntimeException;
+import org.strokova.rss.exception.MarkReadException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +35,7 @@ public class MarkReadServlet extends HttpServlet {
                 resp.sendRedirect(req.getHeader(HEADER_REFERRER));
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, MARK_READ_EXCEPTION_MSG, e);
-                throw new MarkReadRuntimeException(MARK_READ_EXCEPTION_MSG, e);
+                throw new MarkReadException(MARK_READ_EXCEPTION_MSG, e);
             }
         }
     }

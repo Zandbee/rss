@@ -8,8 +8,6 @@ import java.util.Locale;
  * @author vstrokova, 10.08.2016.
  */
 public class FeedItemWithReadStatus {
-    public static final int COL_DESCRIPTION_LENGTH = 3000;
-
     private static final String STATUS_READ = "read";
     private static final String STATUS_UNREAD = "unread";
 

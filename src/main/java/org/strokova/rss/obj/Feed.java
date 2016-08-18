@@ -4,6 +4,8 @@ package org.strokova.rss.obj;
  * author: Veronika, 7/31/2016.
  */
 public class Feed {
+    public static final int COLUMN_FEED_LINK_LENGTH = 3000;
+
     private int id;
     private String feed_link;
 

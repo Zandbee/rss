@@ -3,7 +3,7 @@ package org.strokova.rss.handler;
 import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDbUtils;
-import org.strokova.rss.exception.LoginRuntimeException;
+import org.strokova.rss.exception.LoginException;
 import org.strokova.rss.util.FeedUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, LOGIN_EXCEPTION_MSG, e);
-            throw new LoginRuntimeException(LOGIN_EXCEPTION_MSG, e);
+            throw new LoginException(LOGIN_EXCEPTION_MSG, e);
         }
     }
 }

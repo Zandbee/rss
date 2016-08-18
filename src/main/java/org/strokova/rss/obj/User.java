@@ -4,6 +4,9 @@ package org.strokova.rss.obj;
  * Created by Veronika on 7/31/2016.
  */
 public class User {
+    public static final int COLUMN_USERNAME_LENGTH = 45;
+    public static final int COLUMN_PASSWORD_LENGTH = 45;
+
     private int id;
     private String username;
     private String password;
