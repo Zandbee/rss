@@ -1,5 +1,6 @@
 package org.strokova.rss.handler;
 
+import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.exception.NewRssRuntimeException;
 
@@ -34,7 +35,7 @@ public class AddRssServlet extends HttpServlet {
         try {
             FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(ATTR_USER_ID));
             response.sendRedirect("latest");
-        } catch (SQLException e) {
+        } catch (SQLException | FeedException e) {
             logger.log(Level.SEVERE, NEW_RSS_EXCEPTION_MSG, e);
             throw new NewRssRuntimeException(NEW_RSS_EXCEPTION_MSG, e);
         }

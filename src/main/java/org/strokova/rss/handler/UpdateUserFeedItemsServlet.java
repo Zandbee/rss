@@ -1,5 +1,6 @@
 package org.strokova.rss.handler;
 
+import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.exception.UpdateFeedsRuntimeException;
 
@@ -28,7 +29,7 @@ public class UpdateUserFeedItemsServlet extends HttpServlet {
         try {
             FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(ATTR_USER_ID));
             resp.sendRedirect("latest");
-        } catch (SQLException e) {
+        } catch (SQLException | FeedException e) {
             logger.log(Level.SEVERE, UPDATE_FEEDS_EXCEPTION_MSG, e);
             throw new UpdateFeedsRuntimeException(UPDATE_FEEDS_EXCEPTION_MSG, e);
         }

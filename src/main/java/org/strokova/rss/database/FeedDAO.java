@@ -9,16 +9,12 @@ import org.strokova.rss.obj.FeedItem;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 import org.strokova.rss.obj.SubscriptionWithFeed;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -29,7 +25,7 @@ public class FeedDAO {
 
     private static final int ITEMS_PER_PAGE = 20;
 
-    public static void addRssForUser(String rssLink, String rssName, int userId) throws SQLException {
+    public static void addRssForUser(String rssLink, String rssName, int userId) throws SQLException, IOException, FeedException {
         Connection conn = FeedDbDataSource.getConnection();
         if (conn != null) {
             try {
@@ -52,9 +48,6 @@ public class FeedDAO {
 
                 // commit transaction
                 conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                logger.log(Level.SEVERE, "Error executing SQL", e);
             } finally {
                 if (!conn.isClosed()) {
                     conn.close();
@@ -73,9 +66,6 @@ public class FeedDAO {
                 FeedDbUtils.deleteFromItemReadStatusTable(userId, feedLink, conn);
 
                 conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                logger.log(Level.SEVERE, "Error executing SQL", e);
             } finally {
                 if (!conn.isClosed()) {
                     conn.close();
@@ -84,34 +74,26 @@ public class FeedDAO {
         }
     }
 
-    private static Object[][] getFeedItems(String rssLink, int feedId) {
-        try {
-            SyndFeedInput input = new SyndFeedInput();
-            SyndFeed feed = input.build(new XmlReader(new URL(rssLink)));
-            List<SyndEntry> feedItems = feed.getEntries();
-            Object[][] itemsArray = new Object[feedItems.size()][6];
-            int i = 0;
-            for (SyndEntry item : feedItems) {
-                itemsArray[i][0] = item.getUri(); //guid
-                itemsArray[i][1] = item.getTitle(); //title
-                String description = item.getDescription().getValue();
-                if (description.length() > FeedItem.COL_DESCRIPTION_LENGTH) {
-                    description = description.substring(0, FeedItem.COL_DESCRIPTION_LENGTH - 1);
-                }
-                itemsArray[i][2] = description; //description
-                itemsArray[i][3] = item.getLink(); //link
-                itemsArray[i][4] = item.getPublishedDate(); //pubDate
-                itemsArray[i][5] = feedId;
-                i++;
+    private static Object[][] getFeedItems(String rssLink, int feedId) throws IOException, FeedException {
+        SyndFeedInput input = new SyndFeedInput();
+        SyndFeed feed = input.build(new XmlReader(new URL(rssLink)));
+        List<SyndEntry> feedItems = feed.getEntries();
+        Object[][] itemsArray = new Object[feedItems.size()][6];
+        int i = 0;
+        for (SyndEntry item : feedItems) {
+            itemsArray[i][0] = item.getUri(); //guid
+            itemsArray[i][1] = item.getTitle(); //title
+            String description = item.getDescription().getValue();
+            if (description.length() > FeedItem.COL_DESCRIPTION_LENGTH) {
+                description = description.substring(0, FeedItem.COL_DESCRIPTION_LENGTH - 1);
             }
-            return itemsArray;
-        } catch (MalformedURLException e) {
-            logger.log(Level.SEVERE, "Malformed feed URL: " + rssLink, e);
-        } catch (IOException | FeedException e) {
-            logger.log(Level.SEVERE, "Error reading RSS", e);
+            itemsArray[i][2] = description; //description
+            itemsArray[i][3] = item.getLink(); //link
+            itemsArray[i][4] = item.getPublishedDate(); //pubDate
+            itemsArray[i][5] = feedId;
+            i++;
         }
-
-        return null;
+        return itemsArray;
     }
 
     private static ArrayList<String> getFeedItemsGuids(Object[][] feedItems) {
@@ -135,7 +117,7 @@ public class FeedDAO {
         return userItemReadStatuses;
     }
 
-    public static void updateRssItemsForUser(int userId) throws SQLException {
+    public static void updateRssItemsForUser(int userId) throws SQLException, IOException, FeedException {
         // get user's subscriptions
         List<SubscriptionWithFeed> subscriptions = FeedDbUtils.getUserSubscriptionsWithFeeds(userId);
         // load items from user's feed links
@@ -153,9 +135,6 @@ public class FeedDAO {
                 }
 
                 conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                logger.log(Level.SEVERE, "Error executing SQL", e);
             } finally {
                 if (!conn.isClosed()) {
                     conn.close();
@@ -182,14 +161,16 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order) throws SQLException {
+    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order)
+            throws SQLException {
         if (offset != 0) {
             offset--;
         }
         return FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, order);
     }
 
-    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order) throws SQLException {
+    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order)
+            throws SQLException {
         if (offset != 0) {
             offset--;
         }
