@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public final class FeedUtils {
     private static final Logger logger = Logger.getLogger(FeedUtils.class.getName());
 
-    private static final String HASH_ALGORITHM = "MD5";
+    private static final String HASH_ALGORITHM = "SHA-1";
 
     public static String encodeUrl(String url) {
         String encodedUrl = null;
