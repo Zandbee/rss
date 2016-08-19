@@ -24,6 +24,8 @@ public class SessionValidationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // filter should work for any page, except for login, registration, and error
+        // in order not to enumerate all the existing servlets in pattern, these three are excluded using if
         if (!((HttpServletRequest) request).getRequestURI().startsWith("/rss/login")
                 && !((HttpServletRequest) request).getRequestURI().startsWith("/rss/registration")
                 && !((HttpServletRequest) request).getRequestURI().toLowerCase().contains("error")) {

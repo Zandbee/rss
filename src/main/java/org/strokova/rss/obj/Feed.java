@@ -7,6 +7,8 @@ public class Feed {
     public static final int COLUMN_FEED_LINK_LENGTH = 3000;
 
     private int id;
+    // the fields in obj classes have the same names as in database for convenient work with Apache DbUtils
+    // just sorry for underscores
     private String feed_link;
 
     public int getId() {
