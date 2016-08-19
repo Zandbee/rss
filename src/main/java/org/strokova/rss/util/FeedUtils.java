@@ -17,8 +17,18 @@ public final class FeedUtils {
 
     private static final String HASH_ALGORITHM = "SHA-1";
 
-    private FeedUtils() {
+    private static MessageDigest md;
+
+    static {
+        try {
+            md = MessageDigest.getInstance(HASH_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            logger.log(Level.SEVERE, "Cannot hash password", e);
+        }
     }
+
+
+    private FeedUtils() {}
 
     public static String encodeUrl(String url) {
         String encodedUrl = null;
@@ -41,21 +51,14 @@ public final class FeedUtils {
     }
 
     public static String hashPassword(String password) {
-        String hashedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
-            md.update(password.getBytes());
-            byte[] bytes = md.digest();
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for (byte aByte : bytes) {
-                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
-            }
-            //Get complete hashed password in hex format
-            hashedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            logger.log(Level.SEVERE, "Cannot hash password", e);
+        md.update(password.getBytes());
+        byte[] bytes = md.digest();
+        //Convert it to hexadecimal format
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
-        return hashedPassword;
+        //Get complete hashed password in hex format
+        return sb.toString();
     }
 }
