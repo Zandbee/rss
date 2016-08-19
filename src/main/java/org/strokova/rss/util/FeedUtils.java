@@ -17,6 +17,9 @@ public final class FeedUtils {
 
     private static final String HASH_ALGORITHM = "SHA-1";
 
+    private FeedUtils() {
+    }
+
     public static String encodeUrl(String url) {
         String encodedUrl = null;
         try {

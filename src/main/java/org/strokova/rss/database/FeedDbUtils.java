@@ -32,7 +32,6 @@ public final class FeedDbUtils {
         } else {
             order = ORDER_DESC;
         }
-        // TODO change + in strings into append or one line?
         String query =
                 "select i.guid, i.title, i.description, i.link, i.pub_date, i.feed_id, r.is_read\n" +
                         "from feed_item i\n" +

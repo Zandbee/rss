@@ -50,8 +50,7 @@ public class LoginServlet extends HttpServlet {
                 }
             } else {
                 request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_INCORRECT_CREDENTIALS);
-                RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
-                rd.include(request, response); //TODO forward?
+                request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, LOGIN_EXCEPTION_MSG, e);

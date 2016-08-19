@@ -172,9 +172,9 @@ public class FeedDAO {
 
                     FeedDbUtils.insertIntoItemReadStatusTable(
                             getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
+                    conn.commit();
                 }
 
-                conn.commit();
             } catch (Exception e) {
                 conn.rollback();
                 logger.log(Level.SEVERE, "Cannot update rss", e);
@@ -205,19 +205,20 @@ public class FeedDAO {
         return pageCount;
     }
 
-    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int offset, String order)
-            throws SQLException {
+    private static int getOffset(int offset) {
         if (offset != 0) {
             offset--;
         }
-        return FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, order);
+        return offset * ITEMS_PER_PAGE;
     }
 
-    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int offset, String order)
+    public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int pageNum, String order)
             throws SQLException {
-        if (offset != 0) {
-            offset--;
-        }
-        return FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, offset * ITEMS_PER_PAGE, ITEMS_PER_PAGE, userId, order);
+        return FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, getOffset(pageNum) , ITEMS_PER_PAGE, order);
+    }
+
+    public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int pageNum, String order)
+            throws SQLException {
+        return FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, getOffset(pageNum), ITEMS_PER_PAGE, userId, order);
     }
 }
