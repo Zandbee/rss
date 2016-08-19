@@ -23,16 +23,14 @@ import java.util.logging.Logger;
 public class UpdateUserFeedItemsServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(UpdateUserFeedItemsServlet.class.getName());
 
-    private static final String UPDATE_FEEDS_EXCEPTION_MSG = "Could not update feeds";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             resp.sendRedirect("latest");
         } catch (SQLException | FeedException e) {
-            logger.log(Level.SEVERE, UPDATE_FEEDS_EXCEPTION_MSG, e);
-            throw new UpdateFeedsException(UPDATE_FEEDS_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error updating user's feed items", e);
+            throw new UpdateFeedsException(e);
         }
     }
 }

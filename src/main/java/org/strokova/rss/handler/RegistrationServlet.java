@@ -28,7 +28,6 @@ public class RegistrationServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RegistrationServlet.class.getName());
 
     private static final String REQ_ATTR_ERROR_NAME_EXISTS = "Name is already used. Please choose another name";
-    private static final String REGISTRATION_EXCEPTION_MSG = "Registration failed";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,8 +54,8 @@ public class RegistrationServlet extends HttpServlet {
                 response.sendRedirect("latest");
             }
         } catch (SQLException | ValidationFailedException e) {
-            logger.log(Level.SEVERE, REGISTRATION_EXCEPTION_MSG, e);
-            throw new RegistrationException(REGISTRATION_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error on registration", e);
+            throw new RegistrationException(e);
         }
     }
 }

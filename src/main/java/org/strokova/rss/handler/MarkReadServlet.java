@@ -23,7 +23,6 @@ public class MarkReadServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(MarkReadServlet.class.getName());
 
     private static final String HEADER_REFERRER = "referer";
-    private static final String MARK_READ_EXCEPTION_MSG = "Could not mark as read";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,8 +33,8 @@ public class MarkReadServlet extends HttpServlet {
                 // redirect back
                 resp.sendRedirect(req.getHeader(HEADER_REFERRER));
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, MARK_READ_EXCEPTION_MSG, e);
-                throw new MarkReadException(MARK_READ_EXCEPTION_MSG, e);
+                logger.log(Level.SEVERE, "Error marking as read", e);
+                throw new MarkReadException(e);
             }
         }
     }

@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 public class LatestServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LatestServlet.class.getName());
 
-    private static final String LATEST_EXCEPTION_MSG = "Cannot update the Latest page";
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int userId = (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID);
@@ -40,8 +38,8 @@ public class LatestServlet extends HttpServlet {
 
             req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, LATEST_EXCEPTION_MSG, e);
-            throw new LatestPageException(LATEST_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error on Latest page", e);
+            throw new LatestPageException(e);
         }
     }
 

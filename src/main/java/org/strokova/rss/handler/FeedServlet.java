@@ -29,8 +29,6 @@ import java.util.logging.Logger;
 public class FeedServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FeedServlet.class.getName());
 
-    private static final String FEED_PAGE_EXCEPTION_MSG = "Cannot update the Feed page";
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String feedLink = req.getParameter(PARAM_RSS_ID);
@@ -41,8 +39,8 @@ public class FeedServlet extends HttpServlet {
             setupRssList(req, userId);
             setupPagination(req, userId, feedLink);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, FEED_PAGE_EXCEPTION_MSG, e);
-            throw new FeedPageException(FEED_PAGE_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error on Feed page", e);
+            throw new FeedPageException(e);
         }
 
         req.getRequestDispatcher("/WEB-INF/jsp/feed.jsp").forward(req, resp);
@@ -61,8 +59,8 @@ public class FeedServlet extends HttpServlet {
                 removeRss(removeFeedLink, req, resp);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, FEED_PAGE_EXCEPTION_MSG, e);
-            throw new FeedPageException(FEED_PAGE_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error on Feed page", e);
+            throw new FeedPageException(e);
         }
     }
 
@@ -96,8 +94,7 @@ public class FeedServlet extends HttpServlet {
         FeedDbUtils.updateSubscriptionInSubscriptionTable(
                 (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
                 FeedUtils.decodeUrl(feedLink), newFeedName);
-        //req.getRequestDispatcher(req.getServletPath()).forward(req, resp);
-        resp.sendRedirect("feed?id=" + feedLink); // TODO: fix
+        resp.sendRedirect("feed?id=" + feedLink);
     }
 
     private static void removeRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {

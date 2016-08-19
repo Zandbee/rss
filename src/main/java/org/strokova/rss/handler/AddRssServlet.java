@@ -24,8 +24,6 @@ import java.util.logging.Logger;
 public class AddRssServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(AddRssServlet.class.getName());
 
-    private static final String NEW_RSS_EXCEPTION_MSG = "Could not add a new RSS";
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String rssLink = request.getParameter(PARAM_RSS_LINK);
@@ -35,8 +33,8 @@ public class AddRssServlet extends HttpServlet {
             FeedDAO.addRssForUser(rssLink, rssName, (int) request.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             response.sendRedirect("latest");
         } catch (SQLException | FeedException | ValidationFailedException e) {
-            logger.log(Level.SEVERE, NEW_RSS_EXCEPTION_MSG, e);
-            throw new NewRssException(NEW_RSS_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error adding new rss feed", e);
+            throw new NewRssException(e);
         }
     }
 }

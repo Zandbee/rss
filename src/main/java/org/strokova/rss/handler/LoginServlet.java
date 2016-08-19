@@ -6,7 +6,6 @@ import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.LoginException;
 import org.strokova.rss.util.FeedUtils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +25,6 @@ public class LoginServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
 
     private static final String REQ_ATTR_ERROR_INCORRECT_CREDENTIALS = "Username or password is not correct";
-    private static final String LOGIN_EXCEPTION_MSG = "Login failed";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,8 +50,8 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request, response);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, LOGIN_EXCEPTION_MSG, e);
-            throw new LoginException(LOGIN_EXCEPTION_MSG, e);
+            logger.log(Level.SEVERE, "Error on login", e);
+            throw new LoginException(e);
         }
     }
 }
