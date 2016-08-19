@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.setCharacterEncoding(ENCODING_UTF_8);
         String userName = request.getParameter(PARAM_USERNAME);
         String userPassword = request.getParameter(PARAM_USER_PASSWORD);
 

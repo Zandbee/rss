@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +12,7 @@ $(document).ready(function(){
    });
 });
 </script>
-<link rel="stylesheet" type="text/css" href="feed.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/feed.css">
 </head>
 <body>
     <jsp:include page="rssList.jsp" />
@@ -22,12 +23,12 @@ $(document).ready(function(){
         <h2>${feed.feed_name}</h2>
 
         <button id="edit_btn" >Edit</button>
-        <form id="remove_form" action="feed" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');" style="display: inline;" >
+        <form id="remove_form" action="feed" method="POST" onsubmit="return confirm('Are you sure you want to delete this Feed?');">
             <input type="text" name="remove" value="${feedLink}" hidden>
             <input type="submit" value="Remove" />
         </form>
         <br><br>
-        <form id="edit_block" action="feed" method="POST" style="display: none;">
+        <form id="edit_block" action="feed" method="POST" accept-charset="UTF-8">
             <input type="text" name="id" value="${feedLink}" hidden>
             <input type="text" name="rename" value="${feedLink}" hidden>
             <input type="text" name="newFeedName" maxlength="${feedNameMaxLength}" required="required" />
@@ -40,7 +41,7 @@ $(document).ready(function(){
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small id="item_date">${feedItem.formattedDate}</small>
-                    <form id="mark_read_form" action="markRead" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <form id="mark_read_form" action="markRead" method="post" accept-charset="UTF-8">
                         <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>

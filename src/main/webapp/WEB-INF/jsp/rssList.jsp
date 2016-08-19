@@ -1,26 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<style>
-#menu {
-    float:left;
-    width:18%;
-}
-section {
-    margin-left: 18%;
-    padding: 1em;
-    border-left:1px solid gray;
-}
-hr {
-    display: block;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    border-style: inset;
-    border-width: 1px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/rssList.css">
 </head>
 <body>
     <nav id="menu">

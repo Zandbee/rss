@@ -38,4 +38,6 @@ public final class RequestConstants {
     // session attributes
     public static final String SESSION_ATTR_USER_ID = "userId";
 
+    // encoding
+    public static final String ENCODING_UTF_8 = "UTF-8";
 }

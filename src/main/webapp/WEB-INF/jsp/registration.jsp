@@ -5,9 +5,10 @@
 <html>
 <head>
     <title>Registration</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/registration.css">
 </head>
 <body>
-    <c:if test="${!empty error}"><p style="color:red">${error}</p></c:if>
+    <c:if test="${!empty error}"><p id="error">${error}</p></c:if>
 
     <form action="registration" method="post" accept-charset="UTF-8">
         Name:<br> <input type="text" name="username" maxlength="${usernameMaxLength}" required="required" /><br>

@@ -1,0 +1,13 @@
+.unread {
+    color:green;
+}
+.read {
+    color:red;
+}
+#item_date {
+    color:gray;
+    display: inline;
+}
+#mark_read_form {
+    display: inline;
+}

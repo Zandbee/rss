@@ -1,11 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<style>
-    div.pagination {
-        display: inline;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/pagination.css">
 <body>
 
 <c:forEach var="i" begin="1" end="${pageCount}">
@@ -15,7 +11,7 @@
         <c:param name="page" value="${i}"/>
     </c:url>
     <div class="pagination">
-        <a href="${paginationUrl}" style="color: gray;">${i}</a>
+        <a href="${paginationUrl}" id="page">${i}</a>
     </div>
 </c:forEach>
 

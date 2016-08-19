@@ -4,15 +4,7 @@
 <html>
 <head>
     <title>RSS Reader</title>
-    <style>
-    .unread{
-        color:green;
-    }
-    .read{
-        color:red;
-    }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/latest.css">
 </head>
 <body>
 <jsp:include page="rssList.jsp" />
@@ -28,8 +20,8 @@
             <c:forEach var="feedItem" items="${feedItems}">
                 <tr><td>
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
-                    <small style="color:gray;" style="display: inline;">${feedItem.formattedDate}</small>
-                    <form action="markRead" method="post" accept-charset="UTF-8" style="display: inline;">
+                    <small id="item_date">${feedItem.formattedDate}</small>
+                    <form action="markRead" method="post" id="mark_read_form" accept-charset="UTF-8">
                         <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>

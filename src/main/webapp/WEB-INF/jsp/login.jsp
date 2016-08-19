@@ -5,10 +5,11 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/login.css">
 </head>
 <body>
 
-    <c:if test="${!empty error}"><p style="color:red">${error}</p></c:if>
+    <c:if test="${!empty error}"><p id="error">${error}</p></c:if>
 
     <form action="login" method="post" accept-charset="UTF-8">
         <fieldset>

@@ -31,6 +31,7 @@ public class LatestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding(ENCODING_UTF_8);
         int userId = (int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID);
 
         try {

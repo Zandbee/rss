@@ -33,6 +33,7 @@ public class FeedServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding(ENCODING_UTF_8);
         String feedLink = req.getParameter(PARAM_RSS_ID);
         int userId = (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID);
 
@@ -50,6 +51,7 @@ public class FeedServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding(ENCODING_UTF_8);
         try {
             String renameFeedLink = req.getParameter(PARAM_RENAME_LINK);
             if (renameFeedLink != null) {
