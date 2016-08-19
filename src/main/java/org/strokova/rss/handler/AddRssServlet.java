@@ -28,7 +28,6 @@ public class AddRssServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding(ENCODING_UTF_8);
         String rssLink = request.getParameter(PARAM_RSS_LINK);
         String rssName = request.getParameter(PARAM_RSS_NAME);
 

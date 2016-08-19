@@ -40,7 +40,6 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding(ENCODING_UTF_8);
         String username = request.getParameter(PARAM_USERNAME);
         String password = request.getParameter(PARAM_USER_PASSWORD);
 

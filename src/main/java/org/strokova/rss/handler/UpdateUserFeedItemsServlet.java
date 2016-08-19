@@ -27,7 +27,6 @@ public class UpdateUserFeedItemsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding(ENCODING_UTF_8);
         try {
             FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             resp.sendRedirect("latest");

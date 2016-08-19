@@ -27,7 +27,6 @@ public class MarkReadServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding(ENCODING_UTF_8);
         String guid = req.getParameter(PARAM_MARK_READ);
         if (guid != null) {
             try {
