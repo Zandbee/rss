@@ -102,8 +102,8 @@ public class FeedDAO {
 
     // check if all feed item fields comply with DB column length restrictions
     // @return a list of feed items as arrays of fields
-    private static ArrayList<Object[]> validateFeedItems(List<SyndEntry> feedItems, int feedId) {
-        ArrayList<Object[]> feedItemsArray = new ArrayList<>();
+    private static List<Object[]> validateFeedItems(List<SyndEntry> feedItems, int feedId) {
+        List<Object[]> feedItemsArray = new ArrayList<>();
         for (SyndEntry item : feedItems) {
             String guid = item.getUri();
             if (guid.length() > FeedItem.COLUMN_GUID_LENGTH) {
@@ -136,16 +136,16 @@ public class FeedDAO {
         return feedItemsArray;
     }
 
-    private static ArrayList<String> getFeedItemsGuids(Object[][] feedItems) {
+    private static List<String> getFeedItemsGuids(Object[][] feedItems) {
         int itemsCount = feedItems.length;
-        ArrayList<String> guids = new ArrayList<>(itemsCount);
+        List<String> guids = new ArrayList<>(itemsCount);
         for (Object[] feedItem : feedItems) {
             guids.add(feedItem[0].toString());
         }
         return guids;
     }
 
-    private static Object[][] getUserItemReadStatuses(ArrayList<String> itemGuids, int userId) {
+    private static Object[][] getUserItemReadStatuses(List<String> itemGuids, int userId) {
         Object[][] userItemReadStatuses = new Object[itemGuids.size()][3];
         int i = 0;
         for (String guid : itemGuids) {
