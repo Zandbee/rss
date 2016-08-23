@@ -5,11 +5,12 @@ import static org.strokova.rss.util.RequestConstants.*;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.FeedPageException;
+import org.strokova.rss.exception.ValidationFailedException;
 import org.strokova.rss.obj.FeedItem;
 import org.strokova.rss.obj.FeedItemWithReadStatus;
 import org.strokova.rss.obj.Subscription;
 import org.strokova.rss.obj.SubscriptionWithFeed;
-import org.strokova.rss.util.FeedUtils;
+import org.strokova.rss.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -58,7 +59,7 @@ public class FeedServlet extends HttpServlet {
             if (removeFeedLink != null) {
                 removeRss(removeFeedLink, req, resp);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ValidationFailedException e) {
             logger.log(Level.SEVERE, "Error on Feed page", e);
             throw new FeedPageException(e);
         }
@@ -93,13 +94,13 @@ public class FeedServlet extends HttpServlet {
         String newFeedName = req.getParameter(PARAM_NEW_FEED_NAME);
         FeedDbUtils.updateSubscriptionInSubscriptionTable(
                 (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID),
-                FeedUtils.decodeUrl(feedLink), newFeedName);
+                Utils.decodeUrl(feedLink), newFeedName);
         resp.sendRedirect("feed?id=" + feedLink);
     }
 
-    private static void removeRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+    private static void removeRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException, ValidationFailedException {
             FeedDAO.deleteRssForUser(
-                    FeedUtils.decodeUrl(feedLink),
+                    Utils.decodeUrl(feedLink),
                     (int) req.getSession().getAttribute(SESSION_ATTR_USER_ID));
             resp.sendRedirect("latest");
     }

@@ -6,7 +6,7 @@ import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.RegistrationException;
 import org.strokova.rss.exception.ValidationFailedException;
 import org.strokova.rss.obj.User;
-import org.strokova.rss.util.FeedUtils;
+import org.strokova.rss.util.Utils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,7 +49,7 @@ public class RegistrationServlet extends HttpServlet {
                 rd.include(request, response);
             } else {
                 HttpSession session = request.getSession(true);
-                int userId = FeedDbUtils.insertIntoUserTable(username, FeedUtils.hashPassword(password));
+                int userId = FeedDbUtils.insertIntoUserTable(username, Utils.hashPassword(password));
                 session.setAttribute(SESSION_ATTR_USER_ID, userId);
                 response.sendRedirect("latest");
             }

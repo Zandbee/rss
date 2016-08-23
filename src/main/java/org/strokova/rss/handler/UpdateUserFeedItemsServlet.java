@@ -5,6 +5,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 import com.rometools.rome.io.FeedException;
 import org.strokova.rss.database.FeedDAO;
 import org.strokova.rss.exception.UpdateFeedsException;
+import org.strokova.rss.exception.ValidationFailedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ public class UpdateUserFeedItemsServlet extends HttpServlet {
         try {
             FeedDAO.updateRssItemsForUser((int) req.getSession(false).getAttribute(SESSION_ATTR_USER_ID));
             resp.sendRedirect("latest");
-        } catch (SQLException | FeedException e) {
+        } catch (SQLException | ValidationFailedException e) {
             logger.log(Level.SEVERE, "Error updating user's feed items", e);
             throw new UpdateFeedsException(e);
         }

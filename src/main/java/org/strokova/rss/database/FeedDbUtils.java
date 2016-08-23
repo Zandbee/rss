@@ -6,7 +6,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.strokova.rss.exception.ValidationFailedException;
 import org.strokova.rss.obj.*;
-import org.strokova.rss.util.FeedUtils;
+import org.strokova.rss.util.Utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -64,7 +64,7 @@ public final class FeedDbUtils {
                         "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler = new BeanListHandler<>(FeedItemWithReadStatus.class);
-        return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId, offset, limit);
+        return run.query(query, resultHandler, Utils.decodeUrl(feedLink), userId, offset, limit);
     }
 
     // Get the number of feed items for a user. Returns 0 if no feed items found
@@ -89,7 +89,7 @@ public final class FeedDbUtils {
                         "where feed.feed_link = ? and r.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<RowCount> resultHandler = new BeanHandler<>(RowCount.class);
-        RowCount rows = run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
+        RowCount rows = run.query(query, resultHandler, Utils.decodeUrl(feedLink), userId);
         return rows != null ? rows.getCount() : 0;
     }
 
@@ -121,7 +121,7 @@ public final class FeedDbUtils {
                         "where f.feed_link = ? and s.user_id = ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<SubscriptionWithFeed> resultHandler = new BeanHandler<>(SubscriptionWithFeed.class);
-        return run.query(query, resultHandler, FeedUtils.decodeUrl(feedLink), userId);
+        return run.query(query, resultHandler, Utils.decodeUrl(feedLink), userId);
     }
 
     public static boolean isValidUser(String userName, String userPassword) throws SQLException {

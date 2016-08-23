@@ -4,7 +4,7 @@ import static org.strokova.rss.util.RequestConstants.*;
 
 import org.strokova.rss.database.FeedDbUtils;
 import org.strokova.rss.exception.LoginException;
-import org.strokova.rss.util.FeedUtils;
+import org.strokova.rss.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
         String userPassword = request.getParameter(PARAM_USER_PASSWORD);
 
         try {
-            if (FeedDbUtils.isValidUser(userName, FeedUtils.hashPassword(userPassword))) {
+            if (FeedDbUtils.isValidUser(userName, Utils.hashPassword(userPassword))) {
                 HttpSession session = request.getSession(true);
                 Integer id = FeedDbUtils.getUserId(userName);
                 if (id != null) {

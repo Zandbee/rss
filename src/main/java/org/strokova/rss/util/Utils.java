@@ -1,6 +1,8 @@
 package org.strokova.rss.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -12,13 +14,11 @@ import java.util.logging.Logger;
 /**
  * @author vstrokova, 11.08.2016.
  */
-public final class FeedUtils {
-    private static final Logger logger = Logger.getLogger(FeedUtils.class.getName());
+public final class Utils {
+    private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     private static final String HASH_ALGORITHM = "SHA-1";
-
     private static MessageDigest md;
-
     static {
         try {
             md = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -27,8 +27,7 @@ public final class FeedUtils {
         }
     }
 
-
-    private FeedUtils() {}
+    private Utils() {}
 
     public static String encodeUrl(String url) {
         String encodedUrl = null;

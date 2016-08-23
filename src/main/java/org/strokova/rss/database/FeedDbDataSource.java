@@ -28,6 +28,7 @@ public final class FeedDbDataSource {
                 dataSource = (DataSource) envCtx.lookup(JDBC_RESOURCE_NAME);
             } catch (NamingException e) {
                 logger.log(Level.SEVERE, "Error getting DB data source", e);
+                throw new RuntimeException(e);
             }
         }
         return dataSource;
@@ -38,7 +39,7 @@ public final class FeedDbDataSource {
             return getDataSource().getConnection();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error getting connection", e);
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

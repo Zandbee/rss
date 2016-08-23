@@ -1,6 +1,6 @@
 package org.strokova.rss.obj;
 
-import org.strokova.rss.util.FeedUtils;
+import org.strokova.rss.util.Utils;
 
 /**
  * @author vstrokova, 04.08.2016.
@@ -33,7 +33,7 @@ public class SubscriptionWithFeed {
     }
 
     public String getEncodedFeedLink() {
-        return FeedUtils.encodeUrl(feed_link);
+        return Utils.encodeUrl(feed_link);
     }
 
     public void setFeed_link(String feed_link) {
