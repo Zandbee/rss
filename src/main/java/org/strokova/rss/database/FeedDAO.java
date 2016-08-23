@@ -46,8 +46,8 @@ public class FeedDAO {
                 FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
 
                 //add to item_read_status (bulk insert, false for new)
-                FeedDbUtils.insertIntoItemReadStatusTable(getUserItemReadStatuses(
-                        getFeedItemsGuids(feedItems), userId), conn);
+                FeedDbUtils.insertIntoItemReadStatusTable(
+                        getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
 
                 // commit transaction
                 conn.commit();
@@ -98,7 +98,7 @@ public class FeedDAO {
             }
         }
 
-        return putListOfFeedItemArraysIntoArray(feedItemArrays);
+        return putListOfArraysIntoArray(feedItemArrays);
     }
 
     // get all feed item fields and check if their values comply with DB column length restrictions
@@ -132,7 +132,7 @@ public class FeedDAO {
         return value.length() < maxLength;
     }
 
-    private static Object[][] putListOfFeedItemArraysIntoArray(List<Object[]> list) {
+    private static Object[][] putListOfArraysIntoArray(List<Object[]> list) {
         Object[][] itemsArray = new Object[list.size()][];
         int i = 0;
         for (Object[] item : list) {
@@ -152,15 +152,16 @@ public class FeedDAO {
     }
 
     private static Object[][] getUserItemReadStatuses(List<String> itemGuids, int userId) {
-        Object[][] userItemReadStatuses = new Object[itemGuids.size()][3];
-        int i = 0;
+        List<Object[]> itemReadStatuses =  new ArrayList<>(itemGuids.size());
         for (String guid : itemGuids) {
-            userItemReadStatuses[i][0] = userId;
-            userItemReadStatuses[i][1] = guid;
-            userItemReadStatuses[i][2] = Boolean.FALSE;
-            i++;
+            List<Object> itemTeadStatus = new ArrayList<>();
+            // the order of adding is important
+            itemTeadStatus.add(userId);
+            itemTeadStatus.add(guid);
+            itemTeadStatus.add(Boolean.FALSE);
+            itemReadStatuses.add(itemTeadStatus.toArray());
         }
-        return userItemReadStatuses;
+        return putListOfArraysIntoArray(itemReadStatuses);
     }
 
     public static void updateRssItemsForUser(int userId) throws SQLException, IOException, FeedException {
