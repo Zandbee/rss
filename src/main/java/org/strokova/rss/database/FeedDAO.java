@@ -89,51 +89,57 @@ public class FeedDAO {
         SyndFeedInput input = new SyndFeedInput();
         SyndFeed feed = input.build(new XmlReader(new URL(rssLink)));
         List<SyndEntry> feedItems = feed.getEntries();
-        List<Object[]> feedItemsArray = validateFeedItems(feedItems, feedId);
+        List<Object[]> feedItemArrays = new ArrayList<>();
 
-        Object[][] itemsArray = new Object[feedItemsArray.size()][6]; // TODO enum for 6 - feed item fields num
+        for (SyndEntry entry : feedItems) {
+            Object[] item = validateAndGetFeedItemAsArray(entry, feedId);
+            if (item != null) {
+                feedItemArrays.add(item);
+            }
+        }
+
+        return putListOfFeedItemArraysIntoArray(feedItemArrays);
+    }
+
+    // get all feed item fields and check if their values comply with DB column length restrictions
+    // @return null if any of fields that cannot be cut exceeds the max length
+    private static Object[] validateAndGetFeedItemAsArray(SyndEntry itemSource, int feedId) {
+        String guid = itemSource.getUri();
+        String link = itemSource.getLink();
+        if (!validateCannotCut(guid, FeedItem.COLUMN_GUID_LENGTH) ||
+                !validateCannotCut(link, FeedItem.COLUMN_LINK_LENGTH)) {
+            return null;
+        }
+
+        List<Object> feedItemAsList = new ArrayList<>();
+        // the order of adding is important
+        feedItemAsList.add(guid);
+        feedItemAsList.add(validateCanCut(itemSource.getTitle(), FeedItem.COLUMN_TITLE_LENGTH));
+        feedItemAsList.add(validateCanCut(itemSource.getDescription().getValue(), FeedItem.COLUMN_DESCRIPTION_LENGTH));
+        feedItemAsList.add(link);
+        feedItemAsList.add(itemSource.getPublishedDate());
+        feedItemAsList.add(feedId);
+
+        return feedItemAsList.toArray();
+    }
+
+    private static String validateCanCut(String value, int maxLength) {
+        return value.length() <= maxLength ? value : value.substring(0, maxLength - 1);
+    }
+
+    // @return true if value does not exceed the max length
+    private static boolean validateCannotCut(String value, int maxLength) {
+        return value.length() < maxLength;
+    }
+
+    private static Object[][] putListOfFeedItemArraysIntoArray(List<Object[]> list) {
+        Object[][] itemsArray = new Object[list.size()][];
         int i = 0;
-        for (Object[] item : feedItemsArray) {
+        for (Object[] item : list) {
             itemsArray[i] = item;
             i++;
         }
         return itemsArray;
-    }
-
-    // check if all feed item fields comply with DB column length restrictions
-    // @return a list of feed items as arrays of fields
-    private static List<Object[]> validateFeedItems(List<SyndEntry> feedItems, int feedId) {
-        List<Object[]> feedItemsArray = new ArrayList<>();
-        for (SyndEntry item : feedItems) {
-            String guid = item.getUri();
-            if (guid.length() > FeedItem.COLUMN_GUID_LENGTH) {
-                // don't add this item - guid too long
-                continue;
-            }
-            String title = item.getTitle();
-            if (title.length() > FeedItem.COLUMN_TITLE_LENGTH) {
-                title = title.substring(0, FeedItem.COLUMN_TITLE_LENGTH - 1);
-            }
-            String description = item.getDescription().getValue();
-            if (description.length() > FeedItem.COLUMN_DESCRIPTION_LENGTH) {
-                description = description.substring(0, FeedItem.COLUMN_DESCRIPTION_LENGTH - 1);
-            }
-            String link = item.getLink();
-            if (link.length() > FeedItem.COLUMN_LINK_LENGTH) {
-                // don't add this item - link too long
-                continue;
-            }
-
-            Object[] feedItem = new Object[6]; // TODO enum for 6 - feed item fields num
-            feedItem[0] = guid;
-            feedItem[1] = title;
-            feedItem[2] = description;
-            feedItem[3] = link;
-            feedItem[4] = item.getPublishedDate();
-            feedItem[5] = feedId;
-            feedItemsArray.add(feedItem);
-        }
-        return feedItemsArray;
     }
 
     private static List<String> getFeedItemsGuids(Object[][] feedItems) {
