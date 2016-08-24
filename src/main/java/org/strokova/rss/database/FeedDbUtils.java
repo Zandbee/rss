@@ -38,7 +38,7 @@ public final class FeedDbUtils {
                         "join item_read_status r\n" +
                         "on i.guid = r.item_guid\n" +
                         "where r.user_id = ?\n" +
-                        "order by i.pub_date " + order + "\n" +
+                        "order by i.pub_date " + order + ", i.title asc\n" +
                         "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler = new BeanListHandler<>(FeedItemWithReadStatus.class);
@@ -60,7 +60,7 @@ public final class FeedDbUtils {
                         "left join item_read_status r\n" +
                         "on i.guid = r.item_guid\n" +
                         "where feed.feed_link = ? and r.user_id = ?\n" +
-                        "order by i.pub_date " + order + "\n" +
+                        "order by i.pub_date " + order + ", i.title asc\n" +
                         "limit ?, ?;";
         QueryRunner run = new QueryRunner(FeedDbDataSource.getDataSource());
         ResultSetHandler<List<FeedItemWithReadStatus>> resultHandler = new BeanListHandler<>(FeedItemWithReadStatus.class);
