@@ -46,7 +46,7 @@ public class RegistrationServlet extends HttpServlet {
             if (FeedDbUtils.getUserId(username) != null) {
                 request.setAttribute(REQ_ATTR_ERROR, REQ_ATTR_ERROR_NAME_EXISTS);
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp");
-                rd.include(request, response);
+                rd.forward(request, response);
             } else {
                 HttpSession session = request.getSession(true);
                 int userId = FeedDbUtils.insertIntoUserTable(username, Utils.hashPassword(password));

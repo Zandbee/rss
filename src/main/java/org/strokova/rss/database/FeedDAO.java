@@ -29,36 +29,30 @@ public class FeedDAO {
 
     public static void addRssForUser(String rssLink, String rssName, int userId)
             throws SQLException, IOException, FeedException, ValidationFailedException {
-        DbAction addRssQuery = new DbAction() {
-            @Override
-            public void act(Connection conn) throws SQLException, ValidationFailedException {
-                //add to feed table if not exists
-                int feedId = FeedDbUtils.insertRssIntoFeedTable(rssLink, conn);
-                logger.info("new feed id = " + feedId);
+        DbAction addRssQuery = conn -> {
+            //add to feed table if not exists
+            int feedId = FeedDbUtils.insertRssIntoFeedTable(rssLink, conn);
+            logger.info("new feed id = " + feedId);
 
-                //add to subscription table for this user
-                FeedDbUtils.insertIntoSubscriptionTable(userId, feedId, rssName, conn);
+            //add to subscription table for this user
+            FeedDbUtils.insertIntoSubscriptionTable(userId, feedId, rssName, conn);
 
-                //add to feed_item (bulk insert)
-                Object[][] feedItems = getFeedItems(rssLink, feedId);
-                FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
+            //add to feed_item (bulk insert)
+            Object[][] feedItems = getFeedItems(rssLink, feedId);
+            FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
 
-                //add to item_read_status (bulk insert, false for new)
-                FeedDbUtils.insertIntoItemReadStatusTable(
-                        getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
+            //add to item_read_status (bulk insert, false for new)
+            FeedDbUtils.insertIntoItemReadStatusTable(
+                    getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
 
-            }
         };
         addRssQuery.doAction();
     }
 
     public static void deleteRssForUser(String feedLink, int userId) throws SQLException, ValidationFailedException {
-        DbAction deleteRssQuery = new DbAction() {
-            @Override
-            public void act(Connection conn) throws SQLException, ValidationFailedException {
-                FeedDbUtils.deleteFromSubscriptionTable(userId, feedLink, conn);
-                FeedDbUtils.deleteFromItemReadStatusTable(userId, feedLink, conn);
-            }
+        DbAction deleteRssQuery = conn -> {
+            FeedDbUtils.deleteFromSubscriptionTable(userId, feedLink, conn);
+            FeedDbUtils.deleteFromItemReadStatusTable(userId, feedLink, conn);
         };
         deleteRssQuery.doAction();
     }
@@ -158,17 +152,14 @@ public class FeedDAO {
         // get user's subscriptions
         List<SubscriptionWithFeed> subscriptions = FeedDbUtils.getUserSubscriptionsWithFeeds(userId);
         // load items from user's feed links
-        DbAction updateFeedItemsQuery = new DbAction() {
-            @Override
-            public void act(Connection conn) throws SQLException, ValidationFailedException {
-                for (SubscriptionWithFeed subscription : subscriptions) {
-                    Object[][] feedItems = getFeedItems(subscription.getFeed_link(), subscription.getFeed_id());
-                    FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
+        DbAction updateFeedItemsQuery = conn -> {
+            for (SubscriptionWithFeed subscription : subscriptions) {
+                Object[][] feedItems = getFeedItems(subscription.getFeed_link(), subscription.getFeed_id());
+                FeedDbUtils.insertIntoFeedItemTable(feedItems, conn);
 
-                    FeedDbUtils.insertIntoItemReadStatusTable(
-                            getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
-                    conn.commit();
-                }
+                FeedDbUtils.insertIntoItemReadStatusTable(
+                        getUserItemReadStatuses(getFeedItemsGuids(feedItems), userId), conn);
+                conn.commit();
             }
         };
         updateFeedItemsQuery.doAction();
@@ -199,11 +190,13 @@ public class FeedDAO {
         return offset * ITEMS_PER_PAGE;
     }
 
+    // for all feeds on latest page
     public static List<FeedItemWithReadStatus> getUserFeedItemsLatestPage(int userId, int pageNum, String order)
             throws SQLException {
         return FeedDbUtils.getUserFeedItemsWithReadStatusLatest(userId, getOffset(pageNum), ITEMS_PER_PAGE, order);
     }
 
+    // for definite feed on feed page
     public static List<FeedItemWithReadStatus> getFeedItemsByFeedLinkPage(int userId, String feedLink, int pageNum, String order)
             throws SQLException {
         return FeedDbUtils.getFeedItemsWithReadStatusByFeedLink(feedLink, getOffset(pageNum), ITEMS_PER_PAGE, userId, order);
@@ -222,7 +215,7 @@ public class FeedDAO {
                 conn.commit();
             } catch (Exception e) {
                 conn.rollback();
-                logger.log(Level.SEVERE, "Error executing SQL", e);
+                logger.log(Level.SEVERE, "Error running DB transaction", e);
                 throw e;
             } finally {
                 try {
