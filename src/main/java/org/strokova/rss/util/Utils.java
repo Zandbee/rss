@@ -1,5 +1,7 @@
 package org.strokova.rss.util;
 
+import static org.strokova.rss.util.RequestConstants.ENCODING_UTF_8;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -48,14 +50,19 @@ public final class Utils {
     }
 
     public static String hashPassword(String password) {
-        md.update(password.getBytes());
-        byte[] bytes = md.digest();
-        //Convert it to hexadecimal format
-        StringBuilder sb = new StringBuilder();
-        for (byte aByte : bytes) {
-            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+        try {
+            md.update(password.getBytes(ENCODING_UTF_8));
+            byte[] bytes = md.digest();
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for (byte aByte : bytes) {
+                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            return sb.toString();
+        } catch (UnsupportedEncodingException e) {
+            logger.log(Level.SEVERE, "Cannot hash password", e);
+            throw new RuntimeException(e);
         }
-        //Get complete hashed password in hex format
-        return sb.toString();
     }
 }
