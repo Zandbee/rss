@@ -18,6 +18,7 @@ public final class RequestConstants {
     public static final String PARAM_USERNAME = "username";
     public static final String PARAM_USER_PASSWORD = "userpass";
     public static final String PARAM_MARK_READ = "markRead";
+    public static final String PARAM_REDIRECT_URI = "redirectUri";
 
 
     // request attributes
@@ -33,6 +34,7 @@ public final class RequestConstants {
     public static final String REQ_ATTR_MAX_LENGTH_PASSWORD = "passwordMaxLength";
     public static final String REQ_ATTR_MAX_LENGTH_FEED_NAME = "feedNameMaxLength";
     public static final String REQ_ATTR_MAX_LENGTH_FEED_LINK = "feedLinkMaxLength";
+    public static final String REQ_ATTR_REDIRECT_URI = "redirectUri";
 
 
     // session attributes

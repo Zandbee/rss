@@ -42,6 +42,7 @@ $(document).ready(function(){
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small id="item_date">${feedItem.formattedDate}</small>
                     <form id="mark_read_form" action="markRead" method="post" accept-charset="UTF-8">
+                        <input type="text" name="redirectUri" value="${redirectUri}" hidden>
                         <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>

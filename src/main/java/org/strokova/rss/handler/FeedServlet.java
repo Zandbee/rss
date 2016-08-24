@@ -39,6 +39,7 @@ public class FeedServlet extends HttpServlet {
             setupItemsList(req, userId, feedLink);
             setupRssList(req, userId);
             setupPagination(req, userId, feedLink);
+            setupMarkReadButton(req);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error on Feed page", e);
             throw new FeedPageException(e);
@@ -88,6 +89,11 @@ public class FeedServlet extends HttpServlet {
         req.setAttribute(REQ_ATTR_RSSLIST_SUBSCRIPTIONS, FeedDbUtils.getUserSubscriptionsWithFeeds(userId));
         req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_LINK, FeedItem.COLUMN_LINK_LENGTH);
         req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_NAME, Subscription.COLUMN_FEED_NAME_LENGTH);
+    }
+
+    private static void setupMarkReadButton(HttpServletRequest req) {
+        String requestQueryString = req.getQueryString();
+        req.setAttribute(REQ_ATTR_REDIRECT_URI, requestQueryString == null ? "feed" : "feed?" + requestQueryString);
     }
 
     private static void renameRss(String feedLink, HttpServletRequest req, HttpServletResponse resp) throws ServletException, SQLException, IOException {

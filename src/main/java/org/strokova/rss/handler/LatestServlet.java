@@ -35,6 +35,7 @@ public class LatestServlet extends HttpServlet {
             setupItemsList(req, userId);
             setupRssList(req, userId);
             setupPagination(req, userId);
+            setupMarkReadButton(req);
 
             req.getRequestDispatcher("/WEB-INF/jsp/latest.jsp").forward(req, resp);
         } catch (SQLException e) {
@@ -62,5 +63,10 @@ public class LatestServlet extends HttpServlet {
         req.setAttribute(REQ_ATTR_RSSLIST_SUBSCRIPTIONS, FeedDbUtils.getUserSubscriptionsWithFeeds(userId));
         req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_LINK, FeedItem.COLUMN_LINK_LENGTH);
         req.setAttribute(REQ_ATTR_MAX_LENGTH_FEED_NAME, Subscription.COLUMN_FEED_NAME_LENGTH);
+    }
+
+    private static void setupMarkReadButton(HttpServletRequest req) {
+        String requestQueryString = req.getQueryString();
+        req.setAttribute(REQ_ATTR_REDIRECT_URI, requestQueryString == null ? "latest" : "latest?" + requestQueryString);
     }
 }

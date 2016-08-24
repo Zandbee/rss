@@ -22,6 +22,7 @@
                     <h3><a href="${feedItem.link}" class="${feedItem.readStatusAsString}">${feedItem.title}</a></h3>
                     <small id="item_date">${feedItem.formattedDate}</small>
                     <form action="markRead" method="post" id="mark_read_form" accept-charset="UTF-8">
+                        <input type="text" name="redirectUri" value="${redirectUri}" hidden>
                         <input type="text" name="markRead" value="${feedItem.guid}" hidden>
                         <input type="submit" value="Mark as read" />
                     </form>

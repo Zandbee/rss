@@ -22,16 +22,15 @@ import java.util.logging.Logger;
 public class MarkReadServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(MarkReadServlet.class.getName());
 
-    private static final String HEADER_REFERRER = "referer";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String guid = req.getParameter(PARAM_MARK_READ);
+        String redirectUri = req.getParameter(PARAM_REDIRECT_URI);
         if (guid != null) {
             try {
                 FeedDbUtils.updateItemReadStatus((int) req.getSession().getAttribute(SESSION_ATTR_USER_ID), guid);
                 // redirect back
-                resp.sendRedirect(req.getHeader(HEADER_REFERRER));
+                resp.sendRedirect(redirectUri);
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Error marking as read", e);
                 throw new MarkReadException(e);
